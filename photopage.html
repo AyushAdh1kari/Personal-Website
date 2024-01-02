@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Photography Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="top-container">
+
+        <div class="name-container">
+            <h1>Ayush Adhikari</h1>
+        </div>
+
+
+        <div class="contact-icons">
+            <a href="index.html"><img src="images/home-icon.png" height="40" width="40"></a>
+            <a href="mailto:ayush.adhikari1203@gmail.com"> <img src="images/gmail.png" height="40" width="40"></a>
+            <a href="tel:9802427858"><img src="images/phone.png" height="40" width="40"></a> 
+            <a href="https://www.linkedin.com/in/ayushadhikari1/" target="_blank"><img src="images/linkedin.png" height="40" width="40" class="linkedin"></a>
+            <a href="https://github.com/AyushAdh1kari" target="_blank"><img src="images/github.png" height="40" width="40"></a>
+        </div>
+    </div>
+    <hr>
+    <h3>2021</h3>
+    <div class="photos">
+        <img src="images/moonshot.jpeg" alt="Moon Shot" onclick="openExpander(this, 'Date: December 13, 2021', 'Location: Huntersville, NC')" height="275" width="275">
+        <img src="images/pokhara.jpeg" alt="Pokhara" onclick="openExpander(this, 'Date: December 20, 2021', 'Location: Pokhara, Nepal')" height="275" width="275">
+        <img src="images/himal.jpeg" alt="Tanahun" onclick="openExpander(this, 'Date: December 20, 2021', 'Location: Tanahun, Nepal')" height="275" width="275">
+        <img src="images/chitwan.jpeg" alt="Chitwan" onclick="openExpander(this, 'Date: December 21, 2021', 'Location: Chitwan, Nepal')" height="275" width="275">
+        <img src="images/chandrauta2021.jpeg" alt="Chandrauta2021" onclick="openExpander(this, 'Date: December 22, 2021', 'Location: Chandrauta, Nepal')" height="275" width="275">
+        <hr>
+        <h3>2022</h3>
+        <img src="images/qatara330.jpeg" alt="Himalayas" onclick="openExpander(this, 'Date: January 1, 2022', 'Location: Nepal')" height="275" width="275">
+        <img src="images/planespotting.jpeg" alt="Douglas Planespotting" onclick="openExpander(this, 'Date: May 14, 2022', 'Location: Charlotte, NC')" height="275" width="275">
+        <img src="images/chandrauta2022.jpeg" alt="Chandrauta2022" onclick="openExpander(this, 'Date: July 3, 2022', 'Location: Chandrauta, Nepal')" height="275" width="275">
+        <img src="images/swayambhunath.jpeg" alt="Swayambhunath" onclick="openExpander(this, 'Date: July 20, 2022', 'Location: Kathmandu, Nepal')" height="275" width="275">
+        <img src="images/sunsetdrive.jpeg" alt="Fire Sunset" onclick="openExpander(this, 'Date: August 30, 2022', 'Location: Davidson, NC')" height="275" width="275">
+        <hr>
+        <h3>2023</h3>
+        <img src="images/pleaides.jpeg" alt="Pleaides" onclick="openExpander(this, 'Date: January 14, 2023', 'Location: Huntersville, NC')" height="275" width="275">
+        <img src="images/nyc.jpeg" alt="NYC" onclick="openExpander(this, 'Date: July 22, 2023', 'Location: New York, NY')" height="275" width="275">
+        <img src="images/newvrindavan.jpeg" alt="New Vrindavan" onclick="openExpander(this, 'Date: August 30, 2023', 'Location: New Vrindavan, WV')" height="275" width="275">
+        <img src="images/bubridge.jpeg" alt="BU Bridge" onclick="openExpander(this, 'Date: October 13, 2023', 'Location: Boston, MA')" height="275" width="275">
+        <img src="images/neufall2023.jpeg" alt="Northeastern Fall" onclick="openExpander(this, 'Date: October 27, 2023', 'Location: Boston, MA')" height="275" width="275">
+    
+    </div>
+
+    <div id="photoExpander" class="expander">
+        <img class="expander-photos" id="expanderImage">
+        <div id="expanderInfo" class="expander-info"></div> 
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
