@@ -2,7 +2,7 @@ body {
     background-color: white;
 }
 
-h1 {
+.name-container h1 {
     color:red;
     margin: 0;
 
@@ -21,7 +21,7 @@ h1 {
 
 .name-container h1 a {
     display: inline-block;
-    color: black;
+    color: red;
     text-decoration: none;
     transition: transform 0.3s ease;
 }
