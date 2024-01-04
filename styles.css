@@ -2,10 +2,10 @@ body {
     background-color: white;
 }
 
-.name-container h1 {
-    color:red;
+h1 {
+    color: red;
     margin: 0;
-
+    text-align: center;
 }
 
 .top-container {
@@ -32,6 +32,7 @@ body {
 
 .name-container h1 a:active {
     transform: scale(1);
+}
 
 .contact-icons {
     display: flex;
