@@ -63,6 +63,7 @@ Chat modes:
 - `personal` (curiosity/personality context)
 
 Both modes can access the full knowledge base, but prompt/model behavior differs.
+Rate limiting is enabled on `/api/chat` (IP-based, configurable via env vars).
 
 ## Quality Checks
 
@@ -131,6 +132,8 @@ Optional mode-specific model env vars:
 
 - `OPENAI_CHAT_MODEL_PROFESSIONAL`
 - `OPENAI_CHAT_MODEL_PERSONAL`
+- `RATE_LIMIT_WINDOW_MS`
+- `RATE_LIMIT_CHAT_MAX`
 
 If you want OpenAI-backed responses from the Python AI layer, install Python dependencies:
 

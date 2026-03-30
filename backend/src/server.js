@@ -14,6 +14,8 @@ const app = express();
 const port = Number(process.env.PORT || 3001);
 const pythonTimeoutMs = Number(process.env.PYTHON_TIMEOUT_MS || 12_000);
 const maxMessageLength = Number(process.env.MAX_MESSAGE_LENGTH || 500);
+const rateLimitWindowMs = Number(process.env.RATE_LIMIT_WINDOW_MS || 60_000);
+const rateLimitChatMax = Number(process.env.RATE_LIMIT_CHAT_MAX || 30);
 const aiScriptPath = path.resolve(__dirname, "../ai/chat_engine.py");
 
 const frontendOrigin = process.env.FRONTEND_ORIGIN;
@@ -28,6 +30,11 @@ const corsOptions = frontendOrigin
 app.use(cors(corsOptions));
 app.use(express.json());
 
+const chatRateLimiter = createRateLimiter({
+    windowMs: rateLimitWindowMs,
+    maxRequests: rateLimitChatMax
+});
+
 app.get("/api/health", (_req, res) => {
     res.status(200).json({
         ok: true,
@@ -37,7 +44,7 @@ app.get("/api/health", (_req, res) => {
     });
 });
 
-app.post("/api/chat", async (req, res) => {
+app.post("/api/chat", chatRateLimiter, async (req, res) => {
     const startedAt = Date.now();
     const message = typeof req.body?.message === "string" ? req.body.message.trim() : "";
     const history = normalizeHistory(req.body?.history);
@@ -114,6 +121,73 @@ function normalizeHistory(history) {
 
 function normalizeMode(mode) {
     return mode === "personal" ? "personal" : "professional";
+}
+
+function createRateLimiter(options) {
+    const windowMs = Number(options.windowMs);
+    const maxRequests = Number(options.maxRequests);
+    const entries = new Map();
+
+    return function rateLimitMiddleware(req, res, next) {
+        const now = Date.now();
+        const key = resolveClientKey(req);
+        const entry = entries.get(key);
+
+        if (!entry || now >= entry.resetAt) {
+            entries.set(key, {
+                count: 1,
+                resetAt: now + windowMs
+            });
+            setRateLimitHeaders(res, maxRequests, maxRequests - 1, now + windowMs);
+            cleanupRateLimitEntries(entries, now);
+            next();
+            return;
+        }
+
+        entry.count += 1;
+        const remaining = Math.max(0, maxRequests - entry.count);
+        setRateLimitHeaders(res, maxRequests, remaining, entry.resetAt);
+
+        if (entry.count > maxRequests) {
+            const retryAfterSeconds = Math.max(1, Math.ceil((entry.resetAt - now) / 1000));
+            res.setHeader("Retry-After", retryAfterSeconds);
+            res.status(429).json({
+                ok: false,
+                message: "Rate limit exceeded. Please retry shortly."
+            });
+            return;
+        }
+
+        cleanupRateLimitEntries(entries, now);
+        next();
+    };
+}
+
+function resolveClientKey(req) {
+    const header = req.headers["x-forwarded-for"];
+    if (typeof header === "string" && header.trim() !== "") {
+        return header.split(",")[0].trim();
+    }
+
+    return req.ip || req.socket?.remoteAddress || "unknown";
+}
+
+function setRateLimitHeaders(res, limit, remaining, resetAtMs) {
+    res.setHeader("X-RateLimit-Limit", String(limit));
+    res.setHeader("X-RateLimit-Remaining", String(remaining));
+    res.setHeader("X-RateLimit-Reset", String(Math.ceil(resetAtMs / 1000)));
+}
+
+function cleanupRateLimitEntries(entries, now) {
+    if (entries.size < 2000) {
+        return;
+    }
+
+    for (const [key, value] of entries.entries()) {
+        if (value.resetAt <= now) {
+            entries.delete(key);
+        }
+    }
 }
 
 function getPythonCandidates() {
