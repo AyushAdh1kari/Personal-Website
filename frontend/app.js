@@ -34,30 +34,57 @@ function closeExpander() {
     }
 }
 
+const CHAT_MODES = {
+    professional: {
+        label: "Professional",
+        description: "Best for recruiters and collaborators evaluating fit, projects, and skills."
+    },
+    personal: {
+        label: "Personal",
+        description:
+            "Best for people curious about personality, interests, and story behind the work."
+    }
+};
+
 const LOCAL_RESPONSE_PLAYBOOK = [
     {
         match: ["project", "build", "built", "portfolio"],
-        answer: "Ayush is building ayush.ai as a conversation-first portfolio, maintains a dedicated photography archive, and is growing a project stack that combines engineering and design thinking.",
+        professional:
+            "Ayush is building ayush.ai as a conversation-first portfolio, maintains a dedicated photography archive, and is growing a project stack that combines engineering and design thinking.",
+        personal:
+            "He is currently building ayush.ai as a chat-first personal site and also curates a photography archive. A lot of his momentum right now is making the AI experience feel natural and grounded.",
         sources: ["projects.md", "resume.md"]
     },
     {
         match: ["design", "style", "aesthetic", "theme", "ui"],
-        answer: "His design style is clean, high-contrast, and intentional. The black/red system is meant to feel bold while keeping content easy to scan for recruiters.",
+        professional:
+            "His design style is clean, high-contrast, and intentional. The black/red system is meant to feel bold while staying easy to scan for recruiters.",
+        personal:
+            "His visual style leans bold and minimal: strong contrast, intentional typography, and no unnecessary clutter. The black/red palette is meant to feel confident and memorable.",
         sources: ["writing-style.md", "personality.md"]
     },
     {
         match: ["hire", "why", "team", "collaborator"],
-        answer: "Ayush brings a strong combination of technical execution, curiosity, and communication. He moves quickly from idea to implementation while caring about product clarity.",
+        professional:
+            "Ayush brings a strong combination of technical execution, curiosity, and communication. He moves quickly from idea to implementation while caring about product clarity.",
+        personal:
+            "He is collaborative, direct, and execution-focused. People usually appreciate that he can move from ideas to shipped work quickly while still caring about user experience.",
         sources: ["resume.md", "personality.md"]
     },
     {
         match: ["interest", "hobby", "outside", "free time"],
-        answer: "Outside of coding, Ayush is into photography, astronomy, aviation, fitness, and documentaries. Those interests influence his creative direction across projects.",
+        professional:
+            "Outside of coding, Ayush is into photography, astronomy, aviation, fitness, and documentaries. Those interests influence his creative direction across projects.",
+        personal:
+            "Outside work, he spends a lot of time on photography, astronomy, and aviation, plus fitness and documentaries. Those interests strongly shape how he thinks and creates.",
         sources: ["bio.md"]
     },
     {
         match: ["skill", "stack", "technology", "tech"],
-        answer: "Current strengths include Python, Java, and practical software workflows. The roadmap includes OpenAI, embeddings, and retrieval-backed chat responses.",
+        professional:
+            "Current strengths include Python, Java, and practical software workflows. The roadmap includes OpenAI, embeddings, and retrieval-backed chat responses.",
+        personal:
+            "His current stack is centered around Python and Java with a practical builder mindset. Right now he is focused on making the AI layer more reliable and context-aware.",
         sources: ["resume.md", "projects.md"]
     }
 ];
@@ -65,6 +92,7 @@ const LOCAL_RESPONSE_PLAYBOOK = [
 const CHAT_HISTORY_LIMIT = 8;
 const API_TIMEOUT_MS = 10_000;
 const chatHistory = [];
+let activeChatMode = "professional";
 let isSubmitting = false;
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -82,10 +110,24 @@ function wireChatDemo() {
     const chatInput = /** @type {HTMLInputElement | null} */ (document.getElementById("chatInput"));
     /** @type {HTMLElement | null} */
     const chatMessages = document.getElementById("chatMessages");
+    const modeButtons = document.querySelectorAll(".mode-btn");
+    /** @type {HTMLElement | null} */
+    const modeNote = document.getElementById("modeNote");
 
     if (!chatForm || !chatInput || !chatMessages) {
         return;
     }
+
+    modeButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            const nextMode = button.getAttribute("data-mode");
+            if (nextMode) {
+                setChatMode(nextMode, modeButtons, modeNote, chatMessages, true);
+            }
+        });
+    });
+
+    setChatMode(activeChatMode, modeButtons, modeNote, chatMessages, false);
 
     const promptButtons = document.querySelectorAll(".prompt-btn");
 
@@ -109,6 +151,38 @@ function wireChatDemo() {
 }
 
 /**
+ * @param {string} mode
+ * @param {NodeListOf<Element>} modeButtons
+ * @param {HTMLElement | null} modeNote
+ * @param {HTMLElement} chatMessages
+ * @param {boolean} announce
+ */
+function setChatMode(mode, modeButtons, modeNote, chatMessages, announce) {
+    activeChatMode = mode === "personal" ? "personal" : "professional";
+
+    modeButtons.forEach(function (button) {
+        const isActive = button.getAttribute("data-mode") === activeChatMode;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
+
+    if (modeNote) {
+        modeNote.textContent = CHAT_MODES[activeChatMode].description;
+    }
+
+    chatHistory.length = 0;
+
+    if (announce) {
+        appendBubble(
+            chatMessages,
+            "assistant",
+            "Switched to " + CHAT_MODES[activeChatMode].label + " mode.",
+            []
+        );
+    }
+}
+
+/**
  * @param {string} question
  * @param {HTMLElement} chatMessages
  * @param {HTMLInputElement} chatInput
@@ -126,9 +200,9 @@ async function submitPrompt(question, chatMessages, chatInput) {
     let chatResponse;
 
     try {
-        chatResponse = await requestBackendResponse(question, chatHistory);
+        chatResponse = await requestBackendResponse(question, chatHistory, activeChatMode);
     } catch {
-        chatResponse = buildLocalFallback(question);
+        chatResponse = buildLocalFallback(question, activeChatMode);
     }
 
     if (typingBubble && typingBubble.parentNode) {
@@ -156,8 +230,9 @@ function pushHistory(role, content) {
 /**
  * @param {string} question
  * @param {Array<{role: string, content: string}>} history
+ * @param {string} mode
  */
-async function requestBackendResponse(question, history) {
+async function requestBackendResponse(question, history, mode) {
     const apiBaseUrl = resolveApiBaseUrl();
     const endpoint = apiBaseUrl + "/api/chat";
     const controller = new AbortController();
@@ -173,7 +248,8 @@ async function requestBackendResponse(question, history) {
             },
             body: JSON.stringify({
                 message: question,
-                history: history.slice(-6)
+                history: history.slice(-6),
+                mode
             }),
             signal: controller.signal
         });
@@ -207,9 +283,11 @@ function resolveApiBaseUrl() {
 
 /**
  * @param {string} question
+ * @param {string} mode
  */
-function buildLocalFallback(question) {
+function buildLocalFallback(question, mode) {
     const normalized = question.toLowerCase();
+    const normalizedMode = mode === "personal" ? "personal" : "professional";
 
     for (let i = 0; i < LOCAL_RESPONSE_PLAYBOOK.length; i += 1) {
         const entry = LOCAL_RESPONSE_PLAYBOOK[i];
@@ -219,17 +297,20 @@ function buildLocalFallback(question) {
 
         if (isMatch) {
             return {
-                answer: entry.answer,
+                answer: entry[normalizedMode],
                 sources: entry.sources,
-                mode: "fallback-local"
+                mode: "fallback-local-" + normalizedMode
             };
         }
     }
 
     return {
-        answer: "Good question. The full AI backend is in progress. Ask about projects, skills, design style, interests, or hiring fit for the strongest answers.",
+        answer:
+            normalizedMode === "professional"
+                ? "Good question. Professional mode is active. Ask about projects, technical skills, collaboration style, or hiring fit for the strongest answers."
+                : "Great question. Personal mode is active. Ask about interests, motivations, story, or what Ayush is currently exploring.",
         sources: ["bio.md", "projects.md", "resume.md"],
-        mode: "fallback-local"
+        mode: "fallback-local-" + normalizedMode
     };
 }
 

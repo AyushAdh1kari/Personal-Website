@@ -3,11 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-            name="description"
-            content="ayush.ai - A personal website that feels like a conversation, not a portfolio."
-        />
-        <title>ayush.ai | Talk with Ayush</title>
+        <meta name="description" content="ayush.ai - Chat directly with Ayush AI." />
+        <title>ayush.ai | Chat</title>
         <link rel="stylesheet" href="styles.css" />
         <script src="app.js" defer></script>
     </head>
@@ -20,73 +17,105 @@
                 </div>
 
                 <nav class="primary-nav" aria-label="Primary">
-                    <a class="nav-link" href="#about">About</a>
-                    <a class="nav-link" href="#projects">Projects</a>
+                    <a class="nav-link" href="index.html">Chat</a>
+                    <a class="nav-link" href="about.html">About</a>
+                    <a class="nav-link" href="projects.html">Projects</a>
                     <a class="nav-link" href="resume.html">Resume</a>
-                    <a class="nav-link" href="#contact">Contact</a>
                 </nav>
 
-                <div class="contact-icons" aria-label="Social links">
-                    <a
-                        class="icon-link"
-                        href="mailto:ayush.adhikari1203@gmail.com"
-                        aria-label="Email Ayush"
-                        ><img src="images/gmail.png" alt="Gmail icon"
-                    /></a>
-                    <a class="icon-link" href="tel:9802427858" aria-label="Call Ayush"
-                        ><img src="images/phone.png" alt="Phone icon"
-                    /></a>
+                <div class="contact-icons" aria-label="Contact links">
+                    <a class="icon-link" href="tel:9802427858" aria-label="Call Ayush">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.08-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.6 12.6 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.6 12.6 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                            />
+                        </svg>
+                    </a>
                     <a
                         class="icon-link"
                         href="https://www.linkedin.com/in/ayushadhikari1/"
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="Ayush on LinkedIn"
-                        ><img src="images/linkedin.png" alt="LinkedIn icon"
-                    /></a>
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                            />
+                            <rect x="2" y="9" width="4" height="12" />
+                            <circle cx="4" cy="4" r="2" />
+                        </svg>
+                    </a>
                     <a
                         class="icon-link"
                         href="https://github.com/AyushAdh1kari"
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="Ayush on GitHub"
-                        ><img src="images/github.png" alt="GitHub icon"
-                    /></a>
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.2-1.5 6.2-6.7a5.2 5.2 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.5s-1.1-.3-3.6 1.3a12.5 12.5 0 0 0-6.5 0C7.2 1.4 6.1 1.7 6.1 1.7A4.9 4.9 0 0 0 6 5.2a5.2 5.2 0 0 0-1.4 3.6c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.6V22"
+                            />
+                        </svg>
+                    </a>
+                    <a
+                        class="icon-link"
+                        href="mailto:ayush.adhikari1203@gmail.com"
+                        aria-label="Email Ayush"
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <path d="m2 7 10 6 10-6" />
+                        </svg>
+                    </a>
                 </div>
             </div>
         </header>
 
-        <main class="site-shell">
-            <section class="hero" aria-labelledby="hero-title">
-                <div class="hero-panel">
-                    <p class="hero-kicker">Personal AI Website</p>
-                    <h1 id="hero-title">
-                        A portfolio you can <span class="accent">talk to</span>.
-                    </h1>
-                    <p class="hero-copy">
-                        Instead of clicking through static pages, ask questions about Ayush's work,
-                        experience, design style, and interests. Fast, grounded answers with a clean
-                        and personal tone.
+        <main class="site-shell page-main">
+            <section class="chat-only-wrap" aria-label="Chat with Ayush AI">
+                <div class="chat-only-intro">
+                    <h1>Ask Ayush Anything</h1>
+                    <p>
+                        This homepage is intentionally chat-first. For details on background,
+                        projects, and contact context, visit the About page.
                     </p>
-                    <div class="pill-list" aria-label="Highlights">
-                        <span class="pill">Recruiter Friendly</span>
-                        <span class="pill">Grounded Responses</span>
-                        <span class="pill">Black + Red Brand System</span>
-                        <span class="pill">MVP Ready</span>
-                    </div>
                 </div>
 
-                <div class="chat-panel" aria-label="Chat with Ayush AI">
+                <div class="chat-panel chat-only">
                     <div class="chat-header">
-                        <h2 class="chat-title">Ask About Ayush</h2>
+                        <h2 class="chat-title">Ayush AI</h2>
                         <span class="status-dot" aria-label="Online"></span>
                     </div>
+
+                    <div class="mode-switch" role="group" aria-label="Chat mode">
+                        <button
+                            class="mode-btn active"
+                            type="button"
+                            data-mode="professional"
+                            aria-pressed="true"
+                        >
+                            Professional
+                        </button>
+                        <button
+                            class="mode-btn"
+                            type="button"
+                            data-mode="personal"
+                            aria-pressed="false"
+                        >
+                            Personal
+                        </button>
+                    </div>
+                    <p id="modeNote" class="mode-note">
+                        Best for recruiters and collaborators evaluating fit, projects, and skills.
+                    </p>
 
                     <div id="chatMessages" class="chat-messages" aria-live="polite">
                         <div class="bubble assistant">
                             <strong>Ayush AI</strong>
-                            Ask me about projects, skills, design style, or why Ayush would be a
-                            strong teammate.
+                            Ask me about projects, skills, design style, interests, or why Ayush
+                            would be a strong teammate.
                             <div class="sources">
                                 <span class="source-chip">bio.md</span>
                                 <span class="source-chip">resume.md</span>
@@ -141,116 +170,6 @@
                         />
                         <button class="chat-submit" type="submit">Send</button>
                     </form>
-                </div>
-            </section>
-
-            <section id="about" class="section" aria-labelledby="about-title">
-                <h2 id="about-title" class="section-title">About Ayush</h2>
-                <div class="card-grid">
-                    <article class="content-card">
-                        <h3 class="card-title">Background</h3>
-                        <p class="small-copy">
-                            CS student at Northeastern University with interests spanning software
-                            engineering, product thinking, and economics.
-                        </p>
-                    </article>
-                    <article class="content-card">
-                        <h3 class="card-title">Core Strengths</h3>
-                        <p class="small-copy">
-                            Python, Java, and practical problem-solving with a builder mindset.
-                            Comfortable owning work from design through delivery.
-                        </p>
-                    </article>
-                    <article class="content-card">
-                        <h3 class="card-title">Personality</h3>
-                        <p class="small-copy">
-                            Curious, direct, and collaborative. Values clear communication, strong
-                            follow-through, and high-quality execution.
-                        </p>
-                    </article>
-                </div>
-            </section>
-
-            <section id="projects" class="section" aria-labelledby="projects-title">
-                <h2 id="projects-title" class="section-title">Featured Work</h2>
-                <p class="lead">A few areas that show both technical and creative range.</p>
-                <div class="project-list">
-                    <article class="project-card">
-                        <h3 class="card-title">ayush.ai (This Site)</h3>
-                        <p class="small-copy">
-                            A conversational personal brand website designed to replace static
-                            browsing with guided AI discovery.
-                        </p>
-                        <div class="project-meta">
-                            <span class="meta-pill">HTML/CSS/JS</span>
-                            <span class="meta-pill">Prompt UX</span>
-                            <span class="meta-pill">RAG Ready</span>
-                        </div>
-                    </article>
-                    <article class="project-card">
-                        <h3 class="card-title">Photography Portfolio</h3>
-                        <p class="small-copy">
-                            A curated gallery of original work featuring skyline, travel,
-                            astrophotography, and aviation moments.
-                        </p>
-                        <div class="project-meta">
-                            <span class="meta-pill">Visual Storytelling</span>
-                            <span class="meta-pill">Creative Direction</span>
-                        </div>
-                        <div class="button-row">
-                            <a class="ghost-link" href="photopage.html">View Gallery</a>
-                        </div>
-                    </article>
-                    <article class="project-card">
-                        <h3 class="card-title">Certification Track</h3>
-                        <p class="small-copy">
-                            Formal certifications in AutoCAD and Python fundamentals to reinforce
-                            technical depth across domains.
-                        </p>
-                        <div class="project-meta">
-                            <span class="meta-pill">AutoCAD</span>
-                            <span class="meta-pill">Python</span>
-                        </div>
-                        <div class="button-row">
-                            <a class="ghost-link" href="autocad.html">AutoCAD</a>
-                            <a class="ghost-link" href="mta.html">Python Cert</a>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-            <section class="section" aria-labelledby="fallback-title">
-                <h2 id="fallback-title" class="section-title">Fallback Pages</h2>
-                <div class="content-card">
-                    <p class="small-copy">
-                        Prefer classic navigation? Browse the static pages directly.
-                    </p>
-                    <div class="button-row">
-                        <a class="link-btn" href="projects.html">Projects Page</a>
-                        <a class="link-btn" href="resume.html">Resume</a>
-                        <a class="link-btn" href="photopage.html">Photos</a>
-                    </div>
-                </div>
-            </section>
-
-            <section id="contact" class="section" aria-labelledby="contact-title">
-                <h2 id="contact-title" class="section-title">Let's Build Something</h2>
-                <div class="content-card">
-                    <p class="small-copy">
-                        Recruiting, collaboration, or freelance inquiries are welcome.
-                    </p>
-                    <div class="button-row">
-                        <a class="cta-link" href="mailto:ayush.adhikari1203@gmail.com"
-                            >Email Ayush</a
-                        >
-                        <a
-                            class="ghost-link"
-                            href="https://www.linkedin.com/in/ayushadhikari1/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            >Connect on LinkedIn</a
-                        >
-                    </div>
                 </div>
             </section>
         </main>

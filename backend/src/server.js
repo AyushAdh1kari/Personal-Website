@@ -32,7 +32,8 @@ app.get("/api/health", (_req, res) => {
     res.status(200).json({
         ok: true,
         service: "ayush-ai-backend",
-        aiLayer: "python"
+        aiLayer: "python",
+        supportedModes: ["professional", "personal"]
     });
 });
 
@@ -40,6 +41,7 @@ app.post("/api/chat", async (req, res) => {
     const startedAt = Date.now();
     const message = typeof req.body?.message === "string" ? req.body.message.trim() : "";
     const history = normalizeHistory(req.body?.history);
+    const mode = normalizeMode(req.body?.mode);
 
     if (!message) {
         return res.status(400).json({
@@ -58,26 +60,29 @@ app.post("/api/chat", async (req, res) => {
     try {
         const pythonResponse = await runPythonAiLayer({
             message,
-            history
+            history,
+            mode
         });
 
         return res.status(200).json({
             ok: true,
             answer: pythonResponse.answer,
             sources: normalizeSources(pythonResponse.sources),
-            mode: pythonResponse.mode || "python",
+            mode: pythonResponse.mode || "python-openai",
+            persona: mode,
             latencyMs: Date.now() - startedAt
         });
     } catch {
         const relevantChunks = await retrieveRelevantChunks(message, 3).catch(() => []);
         const retrievalSources = relevantChunks.map((chunk) => chunk.source);
-        const fallback = buildFallbackAnswer(message, retrievalSources);
+        const fallback = buildFallbackAnswer(message, retrievalSources, mode);
 
         return res.status(200).json({
             ok: true,
             answer: fallback.answer,
             sources: fallback.sources,
             mode: "fallback-node",
+            persona: mode,
             latencyMs: Date.now() - startedAt,
             warning: "python_ai_unavailable"
         });
@@ -105,6 +110,10 @@ function normalizeHistory(history) {
         })
         .filter((entry) => entry.content.length > 0)
         .slice(-8);
+}
+
+function normalizeMode(mode) {
+    return mode === "personal" ? "personal" : "professional";
 }
 
 function getPythonCandidates() {

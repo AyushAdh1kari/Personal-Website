@@ -2,7 +2,7 @@
 
 This repository is split into:
 
-- `frontend/`: static website, chat-style UI, assets, and knowledge docs
+- `frontend/`: static website (chat-first homepage + dedicated about page), assets, and knowledge docs
 - `backend/`: Node API shell with a Python AI layer for chat responses
 
 ## Project Structure
@@ -57,6 +57,12 @@ npm run dev:backend
 Open health endpoint: `http://localhost:3001/api/health`.
 Chat endpoint: `POST http://localhost:3001/api/chat`.
 If Python is not available, backend chat falls back to Node-based responses.
+Chat modes:
+
+- `professional` (recruiter/collaborator context)
+- `personal` (curiosity/personality context)
+
+Both modes can access the full knowledge base, but prompt/model behavior differs.
 
 ## Quality Checks
 
@@ -120,6 +126,11 @@ Frontend template:
 Backend template:
 
 - `backend/.env.example`
+
+Optional mode-specific model env vars:
+
+- `OPENAI_CHAT_MODEL_PROFESSIONAL`
+- `OPENAI_CHAT_MODEL_PERSONAL`
 
 If you want OpenAI-backed responses from the Python AI layer, install Python dependencies:
 

@@ -123,22 +123,30 @@ a:hover {
     border-radius: 10px;
     border: 1px solid var(--border);
     background: #1c1c1c;
+    color: var(--muted);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transition:
         transform 0.2s ease,
-        border-color 0.2s ease;
+        border-color 0.2s ease,
+        color 0.2s ease;
 }
 
 .icon-link:hover {
     transform: translateY(-2px);
     border-color: var(--primary);
+    color: var(--primary);
 }
 
-.icon-link img {
-    width: 18px;
-    height: 18px;
+.icon-link svg {
+    width: 17px;
+    height: 17px;
+    stroke: currentcolor;
+    fill: none;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .hero {
@@ -216,6 +224,38 @@ a:hover {
     justify-content: space-between;
     gap: 1rem;
     padding: 0.3rem 0.2rem;
+}
+
+.mode-switch {
+    display: inline-flex;
+    gap: 0.45rem;
+}
+
+.mode-btn {
+    border: 1px solid var(--border);
+    background: #1f1f1f;
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 0.38rem 0.75rem;
+    font-size: 0.76rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.mode-btn.active {
+    border-color: rgba(229, 9, 20, 0.55);
+    color: #ffd8da;
+    background: rgba(229, 9, 20, 0.17);
+}
+
+.mode-note {
+    margin: -0.25rem 0 0.15rem;
+    color: var(--muted);
+    font-size: 0.84rem;
 }
 
 .chat-title {
@@ -634,4 +674,29 @@ footer {
         text-align: center;
         padding: 0.6rem 0;
     }
+}
+
+.chat-only-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.chat-only-intro {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.chat-only-intro h1 {
+    margin: 0;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+}
+
+.chat-only-intro p {
+    margin: 0.65rem auto 0;
+    color: var(--muted);
+    max-width: 58ch;
+}
+
+.chat-panel.chat-only {
+    min-height: 620px;
 }
