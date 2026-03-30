@@ -1,0 +1,13 @@
+{
+    "extends": ["stylelint-config-standard"],
+    "ignoreFiles": ["dist/**", "node_modules/**"],
+    "rules": {
+        "no-descending-specificity": null,
+        "selector-class-pattern": null,
+        "color-function-alias-notation": null,
+        "color-function-notation": null,
+        "alpha-value-notation": null,
+        "color-hex-length": null,
+        "media-feature-range-notation": null
+    }
+}

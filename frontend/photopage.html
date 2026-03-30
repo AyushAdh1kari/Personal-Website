@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Photography | ayush.ai</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script src="app.js" defer></script>
+    </head>
+
+    <body>
+        <header class="top-container">
+            <div class="header-row">
+                <div class="name-container">
+                    <a class="brand-link" href="index.html">ayush<span>.ai</span></a>
+                </div>
+                <nav class="primary-nav" aria-label="Primary">
+                    <a class="nav-link" href="index.html#about">About</a>
+                    <a class="nav-link" href="projects.html">Projects</a>
+                    <a class="nav-link" href="resume.html">Resume</a>
+                    <a class="nav-link" href="index.html#contact">Contact</a>
+                </nav>
+                <div class="contact-icons" aria-label="Social links">
+                    <a
+                        class="icon-link"
+                        href="mailto:ayush.adhikari1203@gmail.com"
+                        aria-label="Email Ayush"
+                        ><img src="images/gmail.png" alt="Gmail icon"
+                    /></a>
+                    <a class="icon-link" href="tel:9802427858" aria-label="Call Ayush"
+                        ><img src="images/phone.png" alt="Phone icon"
+                    /></a>
+                    <a
+                        class="icon-link"
+                        href="https://www.linkedin.com/in/ayushadhikari1/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Ayush on LinkedIn"
+                        ><img src="images/linkedin.png" alt="LinkedIn icon"
+                    /></a>
+                    <a
+                        class="icon-link"
+                        href="https://github.com/AyushAdh1kari"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Ayush on GitHub"
+                        ><img src="images/github.png" alt="GitHub icon"
+                    /></a>
+                </div>
+            </div>
+        </header>
+
+        <main class="site-shell page-main">
+            <h1 class="page-title">Photography Portfolio</h1>
+            <p class="page-subtitle">All photos captured and edited by Ayush.</p>
+
+            <h2 class="photo-year">2021</h2>
+            <div class="photo-grid">
+                <img
+                    src="images/moonshot.jpeg"
+                    alt="Moon shot"
+                    onclick="
+                        openExpander(this, 'Date: December 13, 2021', 'Location: Huntersville, NC')
+                    "
+                />
+                <img
+                    src="images/pokhara.jpeg"
+                    alt="Pokhara landscape"
+                    onclick="
+                        openExpander(this, 'Date: December 20, 2021', 'Location: Pokhara, Nepal')
+                    "
+                />
+                <img
+                    src="images/himal.jpeg"
+                    alt="Tanahun landscape"
+                    onclick="
+                        openExpander(this, 'Date: December 20, 2021', 'Location: Tanahun, Nepal')
+                    "
+                />
+                <img
+                    src="images/chitwan.jpeg"
+                    alt="Chitwan scene"
+                    onclick="
+                        openExpander(this, 'Date: December 21, 2021', 'Location: Chitwan, Nepal')
+                    "
+                />
+                <img
+                    src="images/chandrauta2021.jpeg"
+                    alt="Chandrauta 2021"
+                    onclick="
+                        openExpander(this, 'Date: December 22, 2021', 'Location: Chandrauta, Nepal')
+                    "
+                />
+            </div>
+
+            <h2 class="photo-year">2022</h2>
+            <div class="photo-grid">
+                <img
+                    src="images/qatara330.jpeg"
+                    alt="Qatar A330 over the Himalayas"
+                    onclick="openExpander(this, 'Date: January 1, 2022', 'Location: Nepal')"
+                />
+                <img
+                    src="images/planespotting.jpeg"
+                    alt="Planespotting at Charlotte"
+                    onclick="openExpander(this, 'Date: May 14, 2022', 'Location: Charlotte, NC')"
+                />
+                <img
+                    src="images/chandrauta2022.jpeg"
+                    alt="Chandrauta 2022"
+                    onclick="
+                        openExpander(this, 'Date: July 3, 2022', 'Location: Chandrauta, Nepal')
+                    "
+                />
+                <img
+                    src="images/swayambhunath.jpeg"
+                    alt="Swayambhunath temple"
+                    onclick="
+                        openExpander(this, 'Date: July 20, 2022', 'Location: Kathmandu, Nepal')
+                    "
+                />
+                <img
+                    src="images/sunsetdrive.jpeg"
+                    alt="Sunset drive"
+                    onclick="openExpander(this, 'Date: August 30, 2022', 'Location: Davidson, NC')"
+                />
+            </div>
+
+            <h2 class="photo-year">2023</h2>
+            <div class="photo-grid">
+                <img
+                    src="images/pleaides.jpeg"
+                    alt="Pleiades stars"
+                    onclick="
+                        openExpander(this, 'Date: January 14, 2023', 'Location: Huntersville, NC')
+                    "
+                />
+                <img
+                    src="images/nyc.jpeg"
+                    alt="New York City skyline"
+                    onclick="openExpander(this, 'Date: July 22, 2023', 'Location: New York, NY')"
+                />
+                <img
+                    src="images/newvrindavan.jpeg"
+                    alt="New Vrindavan"
+                    onclick="
+                        openExpander(this, 'Date: August 30, 2023', 'Location: New Vrindavan, WV')
+                    "
+                />
+                <img
+                    src="images/bubridge.jpeg"
+                    alt="BU Bridge"
+                    onclick="openExpander(this, 'Date: October 13, 2023', 'Location: Boston, MA')"
+                />
+                <img
+                    src="images/neufall2023.jpeg"
+                    alt="Northeastern in fall"
+                    onclick="openExpander(this, 'Date: October 27, 2023', 'Location: Boston, MA')"
+                />
+            </div>
+
+            <div
+                id="photoExpander"
+                class="expander"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Expanded photo view"
+            >
+                <img class="expander-photos" id="expanderImage" alt="Expanded photo" />
+                <div id="expanderInfo" class="expander-info"></div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-row">
+                <span>ayush.ai</span>
+                <span>Visual archive across places, people, and skies.</span>
+            </div>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,37 @@
+name: Docker Validate
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                include:
+                    - name: frontend
+                      context: ./frontend
+                      file: ./frontend/Dockerfile
+                      tags: ayush-ai-frontend:ci
+                    - name: backend
+                      context: ./backend
+                      file: ./backend/Dockerfile
+                      tags: ayush-ai-backend:ci
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Build Docker image (${{ matrix.name }})
+              uses: docker/build-push-action@v6
+              with:
+                  context: ${{ matrix.context }}
+                  file: ${{ matrix.file }}
+                  push: false
+                  tags: ${{ matrix.tags }}

@@ -1,0 +1,22 @@
+services:
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        ports:
+            - "8080:80"
+        restart: unless-stopped
+
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - "3001:3001"
+        env_file:
+            - ./backend/.env.example
+        environment:
+            KNOWLEDGE_DIR: /app/knowledge
+        volumes:
+            - ./frontend/knowledge:/app/knowledge:ro
+        restart: unless-stopped

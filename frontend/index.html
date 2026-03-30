@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="ayush.ai - A personal website that feels like a conversation, not a portfolio."
+        />
+        <title>ayush.ai | Talk with Ayush</title>
+        <link rel="stylesheet" href="styles.css" />
+        <script src="app.js" defer></script>
+    </head>
+
+    <body>
+        <header class="top-container">
+            <div class="header-row">
+                <div class="name-container">
+                    <a class="brand-link" href="index.html">ayush<span>.ai</span></a>
+                </div>
+
+                <nav class="primary-nav" aria-label="Primary">
+                    <a class="nav-link" href="#about">About</a>
+                    <a class="nav-link" href="#projects">Projects</a>
+                    <a class="nav-link" href="resume.html">Resume</a>
+                    <a class="nav-link" href="#contact">Contact</a>
+                </nav>
+
+                <div class="contact-icons" aria-label="Social links">
+                    <a
+                        class="icon-link"
+                        href="mailto:ayush.adhikari1203@gmail.com"
+                        aria-label="Email Ayush"
+                        ><img src="images/gmail.png" alt="Gmail icon"
+                    /></a>
+                    <a class="icon-link" href="tel:9802427858" aria-label="Call Ayush"
+                        ><img src="images/phone.png" alt="Phone icon"
+                    /></a>
+                    <a
+                        class="icon-link"
+                        href="https://www.linkedin.com/in/ayushadhikari1/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Ayush on LinkedIn"
+                        ><img src="images/linkedin.png" alt="LinkedIn icon"
+                    /></a>
+                    <a
+                        class="icon-link"
+                        href="https://github.com/AyushAdh1kari"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Ayush on GitHub"
+                        ><img src="images/github.png" alt="GitHub icon"
+                    /></a>
+                </div>
+            </div>
+        </header>
+
+        <main class="site-shell">
+            <section class="hero" aria-labelledby="hero-title">
+                <div class="hero-panel">
+                    <p class="hero-kicker">Personal AI Website</p>
+                    <h1 id="hero-title">
+                        A portfolio you can <span class="accent">talk to</span>.
+                    </h1>
+                    <p class="hero-copy">
+                        Instead of clicking through static pages, ask questions about Ayush's work,
+                        experience, design style, and interests. Fast, grounded answers with a clean
+                        and personal tone.
+                    </p>
+                    <div class="pill-list" aria-label="Highlights">
+                        <span class="pill">Recruiter Friendly</span>
+                        <span class="pill">Grounded Responses</span>
+                        <span class="pill">Black + Red Brand System</span>
+                        <span class="pill">MVP Ready</span>
+                    </div>
+                </div>
+
+                <div class="chat-panel" aria-label="Chat with Ayush AI">
+                    <div class="chat-header">
+                        <h2 class="chat-title">Ask About Ayush</h2>
+                        <span class="status-dot" aria-label="Online"></span>
+                    </div>
+
+                    <div id="chatMessages" class="chat-messages" aria-live="polite">
+                        <div class="bubble assistant">
+                            <strong>Ayush AI</strong>
+                            Ask me about projects, skills, design style, or why Ayush would be a
+                            strong teammate.
+                            <div class="sources">
+                                <span class="source-chip">bio.md</span>
+                                <span class="source-chip">resume.md</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prompt-panel">
+                        <div class="prompt-grid" role="group" aria-label="Suggested prompts">
+                            <button
+                                class="prompt-btn"
+                                type="button"
+                                data-prompt="What projects has Ayush built?"
+                            >
+                                Projects
+                            </button>
+                            <button
+                                class="prompt-btn"
+                                type="button"
+                                data-prompt="What's Ayush's design style?"
+                            >
+                                Design style
+                            </button>
+                            <button
+                                class="prompt-btn"
+                                type="button"
+                                data-prompt="Why should I hire Ayush?"
+                            >
+                                Why hire him?
+                            </button>
+                            <button
+                                class="prompt-btn"
+                                type="button"
+                                data-prompt="What does Ayush like outside of coding?"
+                            >
+                                Interests
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="chatForm" class="chat-form">
+                        <label for="chatInput" class="sr-only">Ask about Ayush</label>
+                        <input
+                            id="chatInput"
+                            class="chat-input"
+                            type="text"
+                            name="message"
+                            placeholder="Ask about Ayush..."
+                            maxlength="240"
+                            autocomplete="off"
+                            required
+                        />
+                        <button class="chat-submit" type="submit">Send</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="about" class="section" aria-labelledby="about-title">
+                <h2 id="about-title" class="section-title">About Ayush</h2>
+                <div class="card-grid">
+                    <article class="content-card">
+                        <h3 class="card-title">Background</h3>
+                        <p class="small-copy">
+                            CS student at Northeastern University with interests spanning software
+                            engineering, product thinking, and economics.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3 class="card-title">Core Strengths</h3>
+                        <p class="small-copy">
+                            Python, Java, and practical problem-solving with a builder mindset.
+                            Comfortable owning work from design through delivery.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3 class="card-title">Personality</h3>
+                        <p class="small-copy">
+                            Curious, direct, and collaborative. Values clear communication, strong
+                            follow-through, and high-quality execution.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <section id="projects" class="section" aria-labelledby="projects-title">
+                <h2 id="projects-title" class="section-title">Featured Work</h2>
+                <p class="lead">A few areas that show both technical and creative range.</p>
+                <div class="project-list">
+                    <article class="project-card">
+                        <h3 class="card-title">ayush.ai (This Site)</h3>
+                        <p class="small-copy">
+                            A conversational personal brand website designed to replace static
+                            browsing with guided AI discovery.
+                        </p>
+                        <div class="project-meta">
+                            <span class="meta-pill">HTML/CSS/JS</span>
+                            <span class="meta-pill">Prompt UX</span>
+                            <span class="meta-pill">RAG Ready</span>
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <h3 class="card-title">Photography Portfolio</h3>
+                        <p class="small-copy">
+                            A curated gallery of original work featuring skyline, travel,
+                            astrophotography, and aviation moments.
+                        </p>
+                        <div class="project-meta">
+                            <span class="meta-pill">Visual Storytelling</span>
+                            <span class="meta-pill">Creative Direction</span>
+                        </div>
+                        <div class="button-row">
+                            <a class="ghost-link" href="photopage.html">View Gallery</a>
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <h3 class="card-title">Certification Track</h3>
+                        <p class="small-copy">
+                            Formal certifications in AutoCAD and Python fundamentals to reinforce
+                            technical depth across domains.
+                        </p>
+                        <div class="project-meta">
+                            <span class="meta-pill">AutoCAD</span>
+                            <span class="meta-pill">Python</span>
+                        </div>
+                        <div class="button-row">
+                            <a class="ghost-link" href="autocad.html">AutoCAD</a>
+                            <a class="ghost-link" href="mta.html">Python Cert</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section" aria-labelledby="fallback-title">
+                <h2 id="fallback-title" class="section-title">Fallback Pages</h2>
+                <div class="content-card">
+                    <p class="small-copy">
+                        Prefer classic navigation? Browse the static pages directly.
+                    </p>
+                    <div class="button-row">
+                        <a class="link-btn" href="projects.html">Projects Page</a>
+                        <a class="link-btn" href="resume.html">Resume</a>
+                        <a class="link-btn" href="photopage.html">Photos</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact" class="section" aria-labelledby="contact-title">
+                <h2 id="contact-title" class="section-title">Let's Build Something</h2>
+                <div class="content-card">
+                    <p class="small-copy">
+                        Recruiting, collaboration, or freelance inquiries are welcome.
+                    </p>
+                    <div class="button-row">
+                        <a class="cta-link" href="mailto:ayush.adhikari1203@gmail.com"
+                            >Email Ayush</a
+                        >
+                        <a
+                            class="ghost-link"
+                            href="https://www.linkedin.com/in/ayushadhikari1/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >Connect on LinkedIn</a
+                        >
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-row">
+                <span>ayush.ai</span>
+                <span>A personal website that feels like a conversation.</span>
+            </div>
+        </footer>
+    </body>
+</html>
