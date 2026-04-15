@@ -1,0 +1,46 @@
+# ═══════════════════════════════════════════════════════════════
+#  Personal Website — Full Stack Dependencies
+# ═══════════════════════════════════════════════════════════════
+#
+#  QUICK INSTALL
+#  -------------
+#  Node (all packages):   npm install          # run from root, frontend/, or backend/
+#  Python:                pip install -r backend/requirements.txt
+#
+#  Requirements:
+#    - Node.js >= 20
+#    - Python >= 3.10
+#    - npm >= 10
+#
+# ═══════════════════════════════════════════════════════════════
+
+# ── NODE.JS · ROOT (monorepo scripts only) ───────────────────
+# No runtime dependencies — see package.json for workspace scripts
+
+# ── NODE.JS · FRONTEND (devDependencies) ─────────────────────
+@eslint/js@^9.24.0
+eslint@^9.24.0
+globals@^16.0.0
+htmlhint@^1.6.3
+prettier@^3.5.3
+serve@^14.2.4
+stylelint@^16.17.0
+stylelint-config-standard@^38.0.0
+typescript@^5.8.3
+
+# ── NODE.JS · BACKEND (dependencies) ─────────────────────────
+cors@^2.8.5
+dotenv@^16.5.0
+express@^4.21.2
+
+# ── NODE.JS · BACKEND (devDependencies) ──────────────────────
+@eslint/js@^9.24.0
+@types/node@^22.14.1
+eslint@^9.24.0
+globals@^16.0.0
+prettier@^3.5.3
+typescript@^5.8.3
+
+# ── PYTHON · BACKEND ──────────────────────────────────────────
+# Run: pip install -r backend/requirements.txt
+openai>=1.0.0

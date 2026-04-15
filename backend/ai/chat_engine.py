@@ -1,4 +1,5 @@
 import json
+import math
 import os
 import re
 import sys
@@ -104,6 +105,9 @@ PLAYBOOK = [
     },
 ]
 
+DEFAULT_EMBEDDING_MODEL = "text-embedding-3-small"
+EMBEDDINGS_CACHE_FILENAME = ".embeddings_cache.json"
+
 
 def normalize_mode(mode: str) -> str:
     return "personal" if mode == "personal" else "professional"
@@ -153,6 +157,7 @@ def score_chunk(chunk: dict, query_tokens: list[str], mode: str) -> int:
 
 
 def retrieve_context(question: str, mode: str, limit: int = 3) -> list[dict]:
+    """Keyword-based retrieval — used as fallback when no API key."""
     chunks = load_chunks()
     if not chunks:
         return []
@@ -189,23 +194,102 @@ def retrieve_context(question: str, mode: str, limit: int = 3) -> list[dict]:
     return [{"source": item["source"], "text": item["text"]} for item in scored[:limit]]
 
 
-def fallback_answer(question: str, context_sources: list[str], mode: str) -> tuple[str, list[str]]:
-    normalized = question.lower()
-    selected = None
-    for entry in PLAYBOOK:
-        if any(token in normalized for token in entry["match"]):
-            selected = entry
-            break
+# ── Embedding-based RAG ──────────────────────────────────────────────────────
 
-    if selected is None:
-        selected = {
-            "professional": "Good question. Professional mode is active, so I can help most with projects, technical skills, role fit, and collaboration style.",
-            "personal": "Great question. Personal mode is active, so ask about interests, working style, motivations, or what Ayush is currently exploring.",
-            "sources": ["bio.md", "projects.md", "resume.md"],
+
+def cosine_similarity(a: list, b: list) -> float:
+    dot = sum(x * y for x, y in zip(a, b))
+    norm_a = math.sqrt(sum(x * x for x in a))
+    norm_b = math.sqrt(sum(y * y for y in b))
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return dot / (norm_a * norm_b)
+
+
+def embeddings_cache_path() -> Path:
+    return knowledge_dir() / EMBEDDINGS_CACHE_FILENAME
+
+
+def load_embeddings_cache() -> dict:
+    path = embeddings_cache_path()
+    try:
+        if path.exists():
+            return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return {}
+
+
+def save_embeddings_cache(data: dict) -> None:
+    try:
+        embeddings_cache_path().write_text(json.dumps(data), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def is_cache_valid(cache: dict, chunks: list, model: str) -> bool:
+    if not cache or cache.get("model") != model:
+        return False
+    cached_ids = {item["id"] for item in cache.get("chunks", [])}
+    current_ids = {chunk["id"] for chunk in chunks}
+    return cached_ids == current_ids
+
+
+def build_embeddings_cache(chunks: list, client) -> dict | None:
+    model = os.getenv("OPENAI_EMBEDDING_MODEL", DEFAULT_EMBEDDING_MODEL)
+    texts = [chunk["text"] for chunk in chunks]
+    try:
+        response = client.embeddings.create(input=texts, model=model)
+        embeddings = [item.embedding for item in response.data]
+        return {
+            "model": model,
+            "chunks": [
+                {
+                    "id": chunk["id"],
+                    "source": chunk["source"],
+                    "text": chunk["text"],
+                    "embedding": emb,
+                }
+                for chunk, emb in zip(chunks, embeddings)
+            ],
         }
+    except Exception:
+        return None
 
-    all_sources = list(dict.fromkeys([*selected["sources"], *context_sources]))
-    return selected[mode], all_sources
+
+def retrieve_context_semantic(question: str, mode: str, client, limit: int = 5) -> list[dict] | None:
+    """Embedding-based semantic retrieval. Returns None on failure (caller falls back to keyword)."""
+    chunks = load_chunks()
+    if not chunks:
+        return []
+
+    model = os.getenv("OPENAI_EMBEDDING_MODEL", DEFAULT_EMBEDDING_MODEL)
+    cache = load_embeddings_cache()
+
+    if not is_cache_valid(cache, chunks, model):
+        built = build_embeddings_cache(chunks, client)
+        if built is None:
+            return None
+        save_embeddings_cache(built)
+        cache = built
+
+    try:
+        query_response = client.embeddings.create(input=[question], model=model)
+        query_emb = query_response.data[0].embedding
+    except Exception:
+        return None
+
+    scored = []
+    for item in cache["chunks"]:
+        sim = cosine_similarity(query_emb, item["embedding"])
+        boost = SOURCE_BOOSTS.get(mode, {}).get(item["source"], 0) * 0.05
+        scored.append({"source": item["source"], "text": item["text"], "score": sim + boost})
+
+    scored.sort(key=lambda x: x["score"], reverse=True)
+    return [{"source": item["source"], "text": item["text"]} for item in scored[:limit]]
+
+
+# ── Answer generation ────────────────────────────────────────────────────────
 
 
 def model_for_mode(mode: str) -> str:
@@ -215,17 +299,7 @@ def model_for_mode(mode: str) -> str:
     return os.getenv("OPENAI_CHAT_MODEL_PROFESSIONAL", default_model)
 
 
-def call_openai(question: str, context: list[dict], history: list[dict], mode: str) -> str | None:
-    api_key = (os.getenv("OPENAI_API_KEY") or "").strip()
-    if not api_key:
-        return None
-
-    try:
-        from openai import OpenAI  # type: ignore
-    except Exception:
-        return None
-
-    client = OpenAI(api_key=api_key)
+def call_openai(question: str, context: list[dict], history: list[dict], mode: str, client) -> str | None:
     model = model_for_mode(mode)
     system_prompt = MODE_SYSTEM_PROMPTS[mode]
 
@@ -250,21 +324,6 @@ def call_openai(question: str, context: list[dict], history: list[dict], mode: s
     )
 
     try:
-        response = client.responses.create(
-            model=model,
-            input=[
-                {"role": "system", "content": [{"type": "input_text", "text": system_prompt}]},
-                {"role": "user", "content": [{"type": "input_text", "text": prompt}]},
-            ],
-            temperature=0.4,
-        )
-        output_text = getattr(response, "output_text", None)
-        if isinstance(output_text, str) and output_text.strip():
-            return output_text.strip()
-    except Exception:
-        pass
-
-    try:
         completion = client.chat.completions.create(
             model=model,
             temperature=0.4,
@@ -280,6 +339,25 @@ def call_openai(question: str, context: list[dict], history: list[dict], mode: s
         return None
 
     return None
+
+
+def fallback_answer(question: str, context_sources: list[str], mode: str) -> tuple[str, list[str]]:
+    normalized = question.lower()
+    selected = None
+    for entry in PLAYBOOK:
+        if any(token in normalized for token in entry["match"]):
+            selected = entry
+            break
+
+    if selected is None:
+        selected = {
+            "professional": "Good question. Professional mode is active, so I can help most with projects, technical skills, role fit, and collaboration style.",
+            "personal": "Great question. Personal mode is active, so ask about interests, working style, motivations, or what Ayush is currently exploring.",
+            "sources": ["bio.md", "projects.md", "resume.md"],
+        }
+
+    all_sources = list(dict.fromkeys([*selected["sources"], *context_sources]))
+    return selected[mode], all_sources
 
 
 def main() -> int:
@@ -298,16 +376,43 @@ def main() -> int:
         print(json.dumps({"ok": False, "message": "Message is required."}))
         return 1
 
-    context = retrieve_context(message, mode=mode, limit=3)
+    # Build client once if API key is available
+    client = None
+    api_key = (os.getenv("OPENAI_API_KEY") or "").strip()
+    if api_key:
+        try:
+            from openai import OpenAI  # type: ignore
+
+            client = OpenAI(api_key=api_key)
+        except Exception:
+            pass
+
+    # Retrieval: semantic (embeddings) when client is available, keyword otherwise
+    context = []
+    retrieval_method = "keyword"
+
+    if client is not None:
+        semantic = retrieve_context_semantic(message, mode=mode, client=client, limit=5)
+        if semantic is not None:
+            context = semantic
+            retrieval_method = "semantic"
+
+    if retrieval_method == "keyword":
+        context = retrieve_context(message, mode=mode, limit=3)
+
     context_sources = list(dict.fromkeys([chunk["source"] for chunk in context]))
 
-    ai_text = call_openai(message, context, history, mode)
+    # Generate answer via OpenAI if client is available
+    ai_text = None
+    if client is not None:
+        ai_text = call_openai(message, context, history, mode, client)
+
     if ai_text:
         result = {
             "ok": True,
             "answer": ai_text,
             "sources": context_sources,
-            "mode": f"python-openai-{mode}",
+            "mode": f"python-openai-{retrieval_method}-{mode}",
             "persona": mode,
             "latencyMs": round((time.time() - started_at) * 1000),
         }

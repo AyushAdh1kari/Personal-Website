@@ -40,6 +40,8 @@ jobs:
 
             - name: Build static output
               run: npm run build
+              env:
+                  API_BASE_URL: ${{ secrets.API_BASE_URL }}
 
             - name: Setup Pages
               uses: actions/configure-pages@v5
