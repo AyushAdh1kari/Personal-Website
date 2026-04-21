@@ -89,14 +89,114 @@ const LOCAL_RESPONSE_PLAYBOOK = [
     }
 ];
 
+const HUB_EXIT_MESSAGES_NEPALI = {
+    "ai-yush.html": [
+        "ai.yush timro lagi tayar chha.",
+        "kehi sodhna maan lagyo? jaau.",
+        "yaha ko AI bujhchha, believe it."
+    ],
+    "about.html": [
+        "Ayush ko bare ma ke thaha chha?",
+        "ek Nepali manchhe ko katha.",
+        "bahut tabs khuleka chhan usko."
+    ],
+    "projects.html": [
+        "kaam kabhi rokindaina...",
+        "raat ko 2 baje banayeko tha.",
+        "ship garyo. antaama."
+    ],
+    "experiences.html": [
+        "abhai kaam gardaichha...",
+        "credentials load hudaichha...",
+        "Harvard, Amazon, Fidelity. kasto kasto."
+    ],
+    "photopage.html": [
+        "herne? :)",
+        "aankhale dekheko, camera le capture garyo.",
+        "Nepali aankhale dekhe jasto."
+    ],
+    "works.html": [
+        "GitHub herna alas lagyo? worth it chha.",
+        "commit haru le katha bhandaichhan.",
+        "green squares jhutho hundaina."
+    ],
+    "journey.html": [
+        "ghar nabhako manchhe ko katha...",
+        "11 shahar. abhai counting.",
+        "Kathmandu ma janmyo, sarbatra hurdyo."
+    ]
+};
+
+const HUB_EXIT_MESSAGES = {
+    "ai-yush.html": [
+        "ai.yush awaits you.",
+        "go ahead, ask it something weird.",
+        "it knows more than it lets on."
+    ],
+    "about.html": [
+        "Who is Ayush?",
+        "just a guy with too many tabs open.",
+        "nepali kid who ended up in boston somehow."
+    ],
+    "projects.html": [
+        "The grind never ends...",
+        "shipping things nobody asked for.",
+        "yes, I built that at 2am."
+    ],
+    "experiences.html": [
+        "Still working on it...",
+        "credentials loading...",
+        "harvard, amazon, fidelity. not bad for a kid."
+    ],
+    "photopage.html": [
+        "Take a look :)",
+        "shot on a mirrorless, edited with taste.",
+        "I see things differently."
+    ],
+    "works.html": [
+        "Too lazy to go to my GitHub? worth it, I promise.",
+        "the commits tell the story.",
+        "green squares don't lie."
+    ],
+    "journey.html": [
+        "The boy with no hometown...",
+        "11 cities. still counting.",
+        "born in kathmandu, raised everywhere."
+    ]
+};
+
 const CHAT_HISTORY_LIMIT = 8;
 const API_TIMEOUT_MS = 10_000;
 const chatHistory = [];
 let activeChatMode = "professional";
 let isSubmitting = false;
 
+function isNepalifyOn() {
+    return localStorage.getItem("nepalify") === "1";
+}
+
+function wireNepalify() {
+    const toggle = document.getElementById("nepaliToggle");
+    if (!toggle) return;
+
+    function applyState(/** @type {boolean} */ on) {
+        toggle.classList.toggle("active", on);
+        toggle.setAttribute("aria-pressed", String(on));
+    }
+
+    applyState(isNepalifyOn());
+
+    toggle.addEventListener("click", function () {
+        const next = !isNepalifyOn();
+        localStorage.setItem("nepalify", next ? "1" : "0");
+        applyState(next);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     wireLandingIntro();
+    wireHubNavExit();
+    wireNepalify();
     wireChatDemo();
 
     document.addEventListener("keydown", function (event) {
@@ -105,6 +205,63 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+function wireHubNavExit() {
+    const hubLinks = document.querySelectorAll(".home-hub-link");
+    const intro = document.querySelector("[data-intro]");
+    const typeTarget = document.querySelector("[data-type-text]");
+
+    if (!hubLinks.length || !intro || !typeTarget) return;
+
+    hubLinks.forEach(function (link) {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            const href = link.getAttribute("href") || "";
+            const filename = href.split("?")[0].split("/").pop();
+            const pool = isNepalifyOn()
+                ? HUB_EXIT_MESSAGES_NEPALI[filename]
+                : HUB_EXIT_MESSAGES[filename];
+            const message = pool ? pool[Math.floor(Math.random() * pool.length)] : null;
+
+            if (!message) {
+                window.location.href = href;
+                return;
+            }
+
+            const prefersReducedMotion = window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            ).matches;
+
+            typeTarget.textContent = "";
+            document.body.classList.remove("intro-complete");
+
+            if (prefersReducedMotion) {
+                typeTarget.textContent = message;
+                window.setTimeout(function () {
+                    window.location.href = href;
+                }, 400);
+                return;
+            }
+
+            const typeSpeedMs = 72;
+            const holdDelayMs = 800;
+            let index = 0;
+
+            window.setTimeout(function () {
+                const typeInterval = window.setInterval(function () {
+                    index += 1;
+                    typeTarget.textContent = message.slice(0, index);
+                    if (index >= message.length) {
+                        window.clearInterval(typeInterval);
+                        window.setTimeout(function () {
+                            window.location.href = href;
+                        }, holdDelayMs);
+                    }
+                }, typeSpeedMs);
+            }, 120);
+        });
+    });
+}
 
 function wireLandingIntro() {
     const intro = document.querySelector("[data-intro]");
@@ -160,6 +317,18 @@ function wireLandingIntro() {
         return;
     }
 
+    const nepaliSubline = document.getElementById("nepaliSubline");
+
+    function afterTyping() {
+        if (nepaliSubline && isNepalifyOn()) {
+            nepaliSubline.textContent = "Namaste, mero naam Ayush ho.";
+            nepaliSubline.classList.add("visible");
+            window.setTimeout(finishIntro, 900);
+        } else {
+            window.setTimeout(finishIntro, holdDelayMs);
+        }
+    }
+
     let index = 0;
     const typeInterval = window.setInterval(function () {
         index += 1;
@@ -167,7 +336,7 @@ function wireLandingIntro() {
 
         if (index >= typeText.length) {
             window.clearInterval(typeInterval);
-            window.setTimeout(finishIntro, holdDelayMs);
+            afterTyping();
         }
     }, typeSpeedMs);
 }

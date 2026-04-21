@@ -225,6 +225,24 @@
                 </div>
                 <div class="card-grid" id="cityGrid"></div>
             </section>
+
+            <section class="section" aria-labelledby="countries-title">
+                <div class="section-heading">
+                    <p class="section-label">World</p>
+                    <h2 id="countries-title" class="section-title">Countries visited</h2>
+                </div>
+                <div
+                    id="worldMap"
+                    style="
+                        width: 100%;
+                        height: 420px;
+                        border-radius: 18px;
+                        border: 1px solid var(--border);
+                        background: #0c0c0c;
+                    "
+                ></div>
+                <div class="card-grid" id="countryGrid" style="margin-top: 1rem"></div>
+            </section>
         </main>
 
         <footer>
@@ -420,6 +438,83 @@
                     <p class="section-label" style="margin-bottom:0.4rem">${c.region}</p>
                     <p class="small-copy" style="margin-bottom:0.4rem">${c.note}</p>
                     <p style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted)">${c.years} · ${c.duration}</p>
+                </article>
+            `
+                )
+                .join("");
+        </script>
+        <script>
+            const countries = [
+                { name: "Nepal", lat: 28.3949, lng: 84.124, first: "2004", note: "Born here." },
+                {
+                    name: "India",
+                    lat: 20.5937,
+                    lng: 78.9629,
+                    first: "2005",
+                    note: "Early childhood travels."
+                },
+                {
+                    name: "USA",
+                    lat: 37.0902,
+                    lng: -95.7129,
+                    first: "2011",
+                    note: "Called it home ever since."
+                },
+                {
+                    name: "Canada",
+                    lat: 56.1304,
+                    lng: -106.3468,
+                    first: "2025",
+                    note: "First visit."
+                },
+                { name: "UK", lat: 55.3781, lng: -3.436, first: "2025", note: "First visit." },
+                { name: "France", lat: 46.2276, lng: 2.2137, first: "2025", note: "First visit." },
+                { name: "Belgium", lat: 50.5039, lng: 4.4699, first: "2025", note: "First visit." },
+                {
+                    name: "Netherlands",
+                    lat: 52.1326,
+                    lng: 5.2913,
+                    first: "2025",
+                    note: "First visit."
+                }
+            ];
+
+            const worldMap = L.map("worldMap", { zoomControl: true });
+
+            L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: "abcd",
+                maxZoom: 19
+            }).addTo(worldMap);
+
+            const countryIcon = L.divIcon({
+                className: "",
+                html: `<div style="width:10px;height:10px;border-radius:50%;background:#d90c18;border:2px solid rgba(255,59,48,0.5);box-shadow:0 0 7px rgba(217,12,24,0.6);"></div>`,
+                iconSize: [10, 10],
+                iconAnchor: [5, 5],
+                popupAnchor: [0, -9]
+            });
+
+            countries.forEach((c) => {
+                L.marker([c.lat, c.lng], { icon: countryIcon }).addTo(worldMap).bindPopup(`
+                        <div class="popup-city">${c.name}</div>
+                        <div class="popup-years">First visit: ${c.first}</div>
+                    `);
+            });
+
+            const worldBounds = L.latLngBounds(countries.map((c) => [c.lat, c.lng]));
+            worldMap.fitBounds(worldBounds, { padding: [50, 50] });
+            setTimeout(() => worldMap.invalidateSize(), 100);
+
+            const countryGrid = document.getElementById("countryGrid");
+            countryGrid.innerHTML = countries
+                .map(
+                    (c) => `
+                <article class="content-card" style="padding:1rem 1.2rem;">
+                    <h3 class="card-title" style="margin:0 0 0.3rem">${c.name}</h3>
+                    <p class="small-copy" style="margin-bottom:0.4rem">${c.note}</p>
+                    <p style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--primary-bright)">First visit: ${c.first}</p>
                 </article>
             `
                 )
