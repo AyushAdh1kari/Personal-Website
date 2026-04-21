@@ -10,10 +10,7 @@
         <title>Journey | ai.yush</title>
         <link rel="stylesheet" href="styles.css?v=20260421c" />
         <script src="app.js?v=20260421c" defer></script>
-        <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <style>
             #map {
                 width: 100%;
@@ -187,7 +184,8 @@
                 <p class="section-label">Journey</p>
                 <h1 class="page-title">11 cities. 2 countries. Still moving.</h1>
                 <p class="page-subtitle">
-                    Born in Nepal, raised across the US — click any marker to see where I was and when.
+                    Born in Nepal, raised across the US — click any marker to see where I was and
+                    when.
                 </p>
             </section>
 
@@ -243,7 +241,7 @@
                     name: "Kathmandu",
                     region: "Nepal",
                     lat: 27.7172,
-                    lng: 85.3240,
+                    lng: 85.324,
                     years: "2004–2006",
                     duration: "~1 year",
                     note: "Where it all started."
@@ -261,7 +259,7 @@
                     name: "Richmond",
                     region: "Virginia, USA",
                     lat: 37.5407,
-                    lng: -77.4360,
+                    lng: -77.436,
                     years: "2011",
                     duration: "3 months",
                     note: "First stop in America."
@@ -270,7 +268,7 @@
                     name: "Akron",
                     region: "Ohio, USA",
                     lat: 41.0814,
-                    lng: -81.5190,
+                    lng: -81.519,
                     years: "2011",
                     duration: "~1 month",
                     note: "Stayed with dad right after Richmond."
@@ -288,7 +286,7 @@
                     name: "New York",
                     region: "New York, USA",
                     lat: 40.7128,
-                    lng: -74.0060,
+                    lng: -74.006,
                     years: "2012–2013",
                     duration: "~1 year",
                     note: "One year in the city."
@@ -337,20 +335,17 @@
                     years: "2023–present",
                     duration: "Current",
                     note: "Northeastern, co-ops, and what comes next."
-                },
+                }
             ];
 
             const map = L.map("map", { zoomControl: true });
 
-            L.tileLayer(
-                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-                {
-                    attribution:
-                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-                    subdomains: "abcd",
-                    maxZoom: 19,
-                }
-            ).addTo(map);
+            L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: "abcd",
+                maxZoom: 19
+            }).addTo(map);
 
             const dotIcon = L.divIcon({
                 className: "",
@@ -363,7 +358,7 @@
                 "></div>`,
                 iconSize: [12, 12],
                 iconAnchor: [6, 6],
-                popupAnchor: [0, -10],
+                popupAnchor: [0, -10]
             });
 
             const currentIcon = L.divIcon({
@@ -377,26 +372,26 @@
                 "></div>`,
                 iconSize: [16, 16],
                 iconAnchor: [8, 8],
-                popupAnchor: [0, -12],
+                popupAnchor: [0, -12]
             });
 
-            const latlngs = cities.map(c => [c.lat, c.lng]);
+            const latlngs = cities.map((c) => [c.lat, c.lng]);
 
             // Tampa was a detour from Chicago — route back through Chicago before Chantilly
-            const chicago = cities.find(c => c.name === "Chicago");
-            const tampa = cities.find(c => c.name === "Tampa");
+            const chicago = cities.find((c) => c.name === "Chicago");
+            const tampa = cities.find((c) => c.name === "Tampa");
             const tampaIdx = cities.indexOf(tampa);
             const pathCoords = [
                 ...latlngs.slice(0, tampaIdx + 1),
                 [chicago.lat, chicago.lng],
-                ...latlngs.slice(tampaIdx + 1),
+                ...latlngs.slice(tampaIdx + 1)
             ];
 
             L.polyline(pathCoords, {
                 color: "#d90c18",
                 weight: 1.5,
                 opacity: 0.5,
-                dashArray: "5, 7",
+                dashArray: "5, 7"
             }).addTo(map);
 
             cities.forEach((city, i) => {
@@ -414,7 +409,9 @@
             setTimeout(() => map.invalidateSize(), 100);
 
             const grid = document.getElementById("cityGrid");
-            grid.innerHTML = cities.map((c, i) => `
+            grid.innerHTML = cities
+                .map(
+                    (c, i) => `
                 <article class="content-card" style="padding:1rem 1.2rem;">
                     <div style="display:flex;align-items:baseline;gap:0.6rem;margin-bottom:0.3rem;">
                         <h3 class="card-title" style="margin:0">${c.name}</h3>
@@ -424,7 +421,9 @@
                     <p class="small-copy" style="margin-bottom:0.4rem">${c.note}</p>
                     <p style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted)">${c.years} · ${c.duration}</p>
                 </article>
-            `).join("");
+            `
+                )
+                .join("");
         </script>
     </body>
 </html>
