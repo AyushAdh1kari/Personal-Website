@@ -91,39 +91,123 @@ const LOCAL_RESPONSE_PLAYBOOK = [
 
 const HUB_EXIT_MESSAGES = {
     "ai-yush.html": [
-        "ai.yush awaits you.",
-        "go ahead, ask it something weird.",
-        "it knows more than it lets on."
+        {
+            en: "ai.yush awaits you.",
+            romanized: "ai.yush tayyar chha.",
+            devanagari: "ai.yush तयार छ।"
+        },
+        {
+            en: "go ahead, ask it something weird.",
+            romanized: "sodhnus, ajib kura ni thik chha.",
+            devanagari: "सोध्नुस्, अजिब कुरा पनि ठिक छ।"
+        },
+        {
+            en: "it knows more than it lets on.",
+            romanized: "yo bhaneko bhandaa badi jancha.",
+            devanagari: "यो भनेकोभन्दा बढी जान्छ।"
+        }
     ],
     "about.html": [
-        "Who is Ayush?",
-        "just a guy with too many tabs open.",
-        "nepali kid who ended up in boston somehow."
+        {
+            en: "Who is Ayush?",
+            romanized: "Ayush ko ho?",
+            devanagari: "आयुष को हो?"
+        },
+        {
+            en: "just a guy with too many tabs open.",
+            romanized: "dherai tab haru khuleka chhan.",
+            devanagari: "अलि बढी ट्याब्स खुलेका छन्।"
+        },
+        {
+            en: "nepali kid who ended up in boston somehow.",
+            romanized: "ek Nepali keta, Boston pugyo kasari.",
+            devanagari: "एक नेपाली केटा, बोस्टन पुग्यो कसरी।"
+        }
     ],
     "projects.html": [
-        "The grind never ends...",
-        "shipping things nobody asked for.",
-        "yes, I built that at 2am."
+        {
+            en: "The grind never ends...",
+            romanized: "kaam kabhi rukdaina...",
+            devanagari: "काम कहिल्यै रुकदैन..."
+        },
+        {
+            en: "shipping things nobody asked for.",
+            romanized: "kasaile nabhane pani banairakhyo.",
+            devanagari: "कसैले नभने पनि बनाइराख्यो।"
+        },
+        {
+            en: "yes, I built that at 2am.",
+            romanized: "ho, raati 2 baje banayeko.",
+            devanagari: "हो, राति २ बजे बनाएको।"
+        }
     ],
     "experiences.html": [
-        "Still working on it...",
-        "credentials loading...",
-        "harvard, amazon, fidelity. not bad for a kid."
+        {
+            en: "Still working on it...",
+            romanized: "abhai kaam gaardaichha...",
+            devanagari: "अझै काम गार्दैछ..."
+        },
+        {
+            en: "credentials loading...",
+            romanized: "credentials load hudaichha...",
+            devanagari: "क्रेडेन्सियल्स लोड हुँदैछ..."
+        },
+        {
+            en: "harvard, amazon, fidelity. not bad for a kid.",
+            romanized: "Harvard, Amazon, Fidelity. naraamo chaina.",
+            devanagari: "हार्वर्ड, अमेजन, फिडेलिटी। नराम्रो छैन।"
+        }
     ],
     "photopage.html": [
-        "Take a look :)",
-        "shot on a mirrorless, edited with taste.",
-        "I see things differently."
+        {
+            en: "Take a look :)",
+            romanized: "herne? :)",
+            devanagari: "हेर्ने? :)"
+        },
+        {
+            en: "shot on a mirrorless, edited with taste.",
+            romanized: "mirrorless le khinchyo, taste le edit garyo.",
+            devanagari: "मिरोरलेसले खिँच्यो, टेस्टले एडिट गर्यो।"
+        },
+        {
+            en: "I see things differently.",
+            romanized: "ma farak tarikale herdachhu.",
+            devanagari: "म फरक तरिकाले हेर्दछु।"
+        }
     ],
     "works.html": [
-        "Too lazy to go to my GitHub? worth it, I promise.",
-        "the commits tell the story.",
-        "green squares don't lie."
+        {
+            en: "Too lazy to go to my GitHub? worth it, I promise.",
+            romanized: "GitHub jane aalas? worth it chha, sachain.",
+            devanagari: "गिटहब जाने आलस? worth it छ, साँचो।"
+        },
+        {
+            en: "the commits tell the story.",
+            romanized: "commits le nai katha bhandaichhan.",
+            devanagari: "कमिट्सले नै कथा भन्दैछन्।"
+        },
+        {
+            en: "green squares don't lie.",
+            romanized: "green squares jhutho hundaina.",
+            devanagari: "ग्रिन स्क्वेर्स झुटो हुँदैन।"
+        }
     ],
     "journey.html": [
-        "The boy with no hometown...",
-        "11 cities. still counting.",
-        "born in kathmandu, raised everywhere."
+        {
+            en: "The boy with no hometown...",
+            romanized: "ghar nabhako keta...",
+            devanagari: "घर नभएको केटा..."
+        },
+        {
+            en: "11 cities. still counting.",
+            romanized: "11 shahar. abhai counting.",
+            devanagari: "११ शहर। अझै गन्दैछ।"
+        },
+        {
+            en: "born in kathmandu, raised everywhere.",
+            romanized: "Kathmandu ma janmyo, sarbatra huro.",
+            devanagari: "काठमाण्डौमा जन्म्यो, सर्वत्र हुर्कियो।"
+        }
     ]
 };
 
@@ -165,14 +249,18 @@ function wireHubNavExit() {
         }
     }
 
-    function showNepaliLines(/** @type {() => void} */ onDone) {
+    function showNepaliLines(
+        /** @type {string} */ romanized,
+        /** @type {string} */ devanagari,
+        /** @type {() => void} */ onDone
+    ) {
         if (nepaliSubline) {
-            nepaliSubline.textContent = "Namaste, mero naam Ayush ho.";
+            nepaliSubline.textContent = romanized;
             nepaliSubline.classList.add("visible");
         }
         window.setTimeout(function () {
             if (nepaliDevanagari) {
-                nepaliDevanagari.textContent = "(नमस्ते, मेरो नाम आयुष हो।)";
+                nepaliDevanagari.textContent = "(" + devanagari + ")";
                 nepaliDevanagari.classList.add("visible");
             }
         }, 320);
@@ -185,9 +273,9 @@ function wireHubNavExit() {
             const href = link.getAttribute("href") || "";
             const filename = href.split("?")[0].split("/").pop();
             const pool = HUB_EXIT_MESSAGES[filename];
-            const message = pool ? pool[Math.floor(Math.random() * pool.length)] : null;
+            const entry = pool ? pool[Math.floor(Math.random() * pool.length)] : null;
 
-            if (!message) {
+            if (!entry) {
                 window.location.href = href;
                 return;
             }
@@ -201,7 +289,7 @@ function wireHubNavExit() {
             document.body.classList.remove("intro-complete");
 
             if (prefersReducedMotion) {
-                typeTarget.textContent = message;
+                typeTarget.textContent = entry.en;
                 window.setTimeout(function () {
                     window.location.href = href;
                 }, 400);
@@ -214,10 +302,10 @@ function wireHubNavExit() {
             window.setTimeout(function () {
                 const typeInterval = window.setInterval(function () {
                     index += 1;
-                    typeTarget.textContent = message.slice(0, index);
-                    if (index >= message.length) {
+                    typeTarget.textContent = entry.en.slice(0, index);
+                    if (index >= entry.en.length) {
                         window.clearInterval(typeInterval);
-                        showNepaliLines(function () {
+                        showNepaliLines(entry.romanized, entry.devanagari, function () {
                             window.location.href = href;
                         });
                     }
