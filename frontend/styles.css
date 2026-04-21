@@ -454,37 +454,12 @@ input {
     user-select: none;
 }
 
-.nepali-toggle {
-    margin-top: 1.4rem;
-    background: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 0.3rem 0.85rem;
-    color: rgba(255, 255, 255, 0.3);
-    font-size: 0.75rem;
-    font-family: inherit;
-    cursor: pointer;
-    transition:
-        border-color 0.2s ease,
-        color 0.2s ease;
-}
-
-.nepali-toggle:hover {
-    border-color: rgba(255, 255, 255, 0.25);
-    color: rgba(255, 255, 255, 0.55);
-}
-
-.nepali-toggle.active {
-    border-color: rgba(217, 12, 24, 0.5);
-    color: var(--primary-bright);
-}
-
 .landing-nepali-line {
     margin: 0.7rem 0 0;
     font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: clamp(1.3rem, 3.2vw, 2rem);
+    font-size: clamp(1.1rem, 2.8vw, 1.75rem);
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(255, 255, 255, 0.5);
     letter-spacing: 0.01em;
     opacity: 0;
     transform: translateY(6px);
@@ -500,8 +475,9 @@ input {
 
 .landing-devanagari-line {
     font-family: "Noto Serif", "Noto Serif Devanagari", Georgia, serif;
-    font-size: clamp(1.1rem, 2.6vw, 1.6rem);
-    color: rgba(255, 255, 255, 0.5);
+    font-size: clamp(0.85rem, 1.8vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.35);
+    margin-top: 0.2rem;
 }
 
 .ai-page-minimal {
