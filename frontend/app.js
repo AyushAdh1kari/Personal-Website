@@ -116,7 +116,7 @@ const HUB_EXIT_MESSAGES_NEPALI = {
         "Nepali aankhale dekhe jasto."
     ],
     "works.html": [
-        "GitHub herna alas lagyo? worth it chha.",
+        "GitHub herna aako ho? worth it chha, sachain.",
         "commit haru le katha bhandaichhan.",
         "green squares jhutho hundaina."
     ],
@@ -318,12 +318,21 @@ function wireLandingIntro() {
     }
 
     const nepaliSubline = document.getElementById("nepaliSubline");
+    const nepaliDevanagari = document.getElementById("nepaliDevanagari");
 
     function afterTyping() {
-        if (nepaliSubline && isNepalifyOn()) {
-            nepaliSubline.textContent = "Namaste, mero naam Ayush ho.";
-            nepaliSubline.classList.add("visible");
-            window.setTimeout(finishIntro, 900);
+        if (isNepalifyOn()) {
+            if (nepaliSubline) {
+                nepaliSubline.textContent = "Namaste, mero naam Ayush ho.";
+                nepaliSubline.classList.add("visible");
+            }
+            window.setTimeout(function () {
+                if (nepaliDevanagari) {
+                    nepaliDevanagari.textContent = "नमस्ते, मेरो नाम आयुष हो।";
+                    nepaliDevanagari.classList.add("visible");
+                }
+            }, 320);
+            window.setTimeout(finishIntro, 1400);
         } else {
             window.setTimeout(finishIntro, holdDelayMs);
         }

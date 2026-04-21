@@ -498,6 +498,13 @@ input {
     transform: translateY(0);
 }
 
+.landing-devanagari-line {
+    font-family: "Noto Serif", "Noto Serif Devanagari", Georgia, serif;
+    font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+    color: rgba(255, 255, 255, 0.28);
+    transition-delay: 0.05s;
+}
+
 .ai-page-minimal {
     background:
         radial-gradient(circle at 72% 22%, rgba(217, 12, 24, 0.18), transparent 28%),
