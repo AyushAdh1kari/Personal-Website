@@ -383,7 +383,7 @@ def main() -> int:
         try:
             from openai import OpenAI  # type: ignore
 
-            client = OpenAI(api_key=api_key)
+            client = OpenAI(api_key=api_key, timeout=8.0)
         except Exception:
             pass
 
@@ -433,4 +433,15 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except Exception as exc:
+        fallback = {
+            "ok": True,
+            "answer": "Something went wrong in the AI layer. Ask again or try rephrasing.",
+            "sources": [],
+            "mode": "python-crash-fallback",
+            "warning": str(exc),
+        }
+        print(json.dumps(fallback))
+        raise SystemExit(0)

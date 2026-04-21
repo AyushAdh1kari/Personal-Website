@@ -1,6 +1,6 @@
 # Knowledge Base
 
-Update these files to keep ayush.ai responses accurate:
+Update these files to keep ai.yush responses accurate:
 
 - `bio.md`
 - `resume.md`

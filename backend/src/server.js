@@ -8,7 +8,7 @@ const dotenv = require("dotenv");
 const { retrieveRelevantChunks } = require("./lib/knowledge");
 const { buildFallbackAnswer } = require("./services/fallbackResponder");
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
 const port = Number(process.env.PORT || 3001);
@@ -71,16 +71,22 @@ app.post("/api/chat", chatRateLimiter, async (req, res) => {
             mode
         });
 
+        if (pythonResponse.warning) {
+            console.warn("[ai] Python layer returned fallback warning:", pythonResponse.warning);
+        }
+
         return res.status(200).json({
             ok: true,
             answer: pythonResponse.answer,
             sources: normalizeSources(pythonResponse.sources),
             mode: pythonResponse.mode || "python-openai",
             persona: mode,
-            latencyMs: Date.now() - startedAt
+            latencyMs: Date.now() - startedAt,
+            ...(pythonResponse.warning ? { warning: pythonResponse.warning } : {})
         });
-    } catch {
-        const relevantChunks = await retrieveRelevantChunks(message, 3).catch(() => []);
+    } catch (error) {
+        console.error("[ai] Python AI layer unavailable:", error);
+        const relevantChunks = await retrieveRelevantChunks(message, 3, mode).catch(() => []);
         const retrievalSources = relevantChunks.map((chunk) => chunk.source);
         const fallback = buildFallbackAnswer(message, retrievalSources, mode);
 

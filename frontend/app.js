@@ -37,22 +37,22 @@ function closeExpander() {
 const CHAT_MODES = {
     professional: {
         label: "Professional",
-        description: "Best for recruiters and collaborators evaluating fit, projects, and skills."
+        description: "Recruiters, projects, fit."
     },
     personal: {
         label: "Personal",
-        description:
-            "Best for people curious about personality, interests, and story behind the work."
+        description: "Personality, interests, story."
     }
 };
+const BOT_NAME = "ai.yush";
 
 const LOCAL_RESPONSE_PLAYBOOK = [
     {
         match: ["project", "build", "built", "portfolio"],
         professional:
-            "Ayush is building ayush.ai as a conversation-first portfolio, maintains a dedicated photography archive, and is growing a project stack that combines engineering and design thinking.",
+            "Ayush is building ai.yush as a conversation-first portfolio, maintains a dedicated photography archive, and is growing a project stack that combines engineering and design thinking.",
         personal:
-            "He is currently building ayush.ai as a chat-first personal site and also curates a photography archive. A lot of his momentum right now is making the AI experience feel natural and grounded.",
+            "I'm currently building ai.yush as a chat-first personal site, and I also curate a photography archive. A lot of my momentum right now is making the AI experience feel natural and grounded.",
         sources: ["projects.md", "resume.md"]
     },
     {
@@ -60,7 +60,7 @@ const LOCAL_RESPONSE_PLAYBOOK = [
         professional:
             "His design style is clean, high-contrast, and intentional. The black/red system is meant to feel bold while staying easy to scan for recruiters.",
         personal:
-            "His visual style leans bold and minimal: strong contrast, intentional typography, and no unnecessary clutter. The black/red palette is meant to feel confident and memorable.",
+            "My visual style leans bold and minimal: strong contrast, intentional typography, and no unnecessary clutter. I want the black/red palette to feel confident and memorable.",
         sources: ["writing-style.md", "personality.md"]
     },
     {
@@ -68,7 +68,7 @@ const LOCAL_RESPONSE_PLAYBOOK = [
         professional:
             "Ayush brings a strong combination of technical execution, curiosity, and communication. He moves quickly from idea to implementation while caring about product clarity.",
         personal:
-            "He is collaborative, direct, and execution-focused. People usually appreciate that he can move from ideas to shipped work quickly while still caring about user experience.",
+            "I'm collaborative, direct, and execution-focused. I like moving from ideas to shipped work quickly while still caring about user experience.",
         sources: ["resume.md", "personality.md"]
     },
     {
@@ -76,7 +76,7 @@ const LOCAL_RESPONSE_PLAYBOOK = [
         professional:
             "Outside of coding, Ayush is into photography, astronomy, aviation, fitness, and documentaries. Those interests influence his creative direction across projects.",
         personal:
-            "Outside work, he spends a lot of time on photography, astronomy, and aviation, plus fitness and documentaries. Those interests strongly shape how he thinks and creates.",
+            "Outside work, I spend a lot of time on photography, astronomy, and aviation, plus fitness and documentaries. Those interests strongly shape how I think and create.",
         sources: ["bio.md"]
     },
     {
@@ -84,7 +84,7 @@ const LOCAL_RESPONSE_PLAYBOOK = [
         professional:
             "Current strengths include Python, Java, and practical software workflows. The roadmap includes OpenAI, embeddings, and retrieval-backed chat responses.",
         personal:
-            "His current stack is centered around Python and Java with a practical builder mindset. Right now he is focused on making the AI layer more reliable and context-aware.",
+            "My current stack is centered around Python and Java with a practical builder mindset. Right now I'm focused on making the AI layer more reliable and context-aware.",
         sources: ["resume.md", "projects.md"]
     }
 ];
@@ -96,6 +96,7 @@ let activeChatMode = "professional";
 let isSubmitting = false;
 
 document.addEventListener("DOMContentLoaded", function () {
+    wireLandingIntro();
     wireChatDemo();
 
     document.addEventListener("keydown", function (event) {
@@ -104,6 +105,72 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+function wireLandingIntro() {
+    const intro = document.querySelector("[data-intro]");
+    const siteStart = document.getElementById("siteStart");
+    const typeTarget = document.querySelector("[data-type-text]");
+
+    if (!intro) {
+        document.body.classList.add("intro-complete");
+        document.body.classList.remove("intro-locked");
+        return;
+    }
+
+    if (new URLSearchParams(window.location.search).has("skip")) {
+        document.body.classList.add("intro-complete");
+        document.body.classList.remove("intro-locked");
+        if (siteStart) siteStart.focus({ preventScroll: true });
+        return;
+    }
+
+    let completed = false;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const typeText =
+        typeTarget && typeTarget.getAttribute("data-type-text")
+            ? String(typeTarget.getAttribute("data-type-text"))
+            : "";
+    const typeSpeedMs = prefersReducedMotion ? 0 : 85;
+    const holdDelayMs = prefersReducedMotion ? 120 : 1400;
+
+    function finishIntro() {
+        if (completed) {
+            return;
+        }
+
+        completed = true;
+        document.body.classList.add("intro-complete");
+        document.body.classList.remove("intro-locked");
+
+        if (siteStart) {
+            siteStart.focus({ preventScroll: true });
+        }
+    }
+
+    if (!typeTarget || !typeText) {
+        window.setTimeout(finishIntro, holdDelayMs);
+        return;
+    }
+
+    typeTarget.textContent = "";
+
+    if (prefersReducedMotion) {
+        typeTarget.textContent = typeText;
+        window.setTimeout(finishIntro, holdDelayMs);
+        return;
+    }
+
+    let index = 0;
+    const typeInterval = window.setInterval(function () {
+        index += 1;
+        typeTarget.textContent = typeText.slice(0, index);
+
+        if (index >= typeText.length) {
+            window.clearInterval(typeInterval);
+            window.setTimeout(finishIntro, holdDelayMs);
+        }
+    }, typeSpeedMs);
+}
 
 function wireChatDemo() {
     const chatForm = /** @type {HTMLFormElement | null} */ (document.getElementById("chatForm"));
@@ -308,7 +375,7 @@ function buildLocalFallback(question, mode) {
         answer:
             normalizedMode === "professional"
                 ? "Good question. Professional mode is active. Ask about projects, technical skills, collaboration style, or hiring fit for the strongest answers."
-                : "Great question. Personal mode is active. Ask about interests, motivations, story, or what Ayush is currently exploring.",
+                : "Happy to talk more personally. Ask about my interests, motivations, routines, working style, or anything else that helps you get a better sense of who I am.",
         sources: ["bio.md", "projects.md", "resume.md"],
         mode: "fallback-local-" + normalizedMode
     };
@@ -319,7 +386,7 @@ function appendBubble(container, role, message, sources) {
     bubble.className = "bubble " + role;
 
     const label = document.createElement("strong");
-    label.textContent = role === "user" ? "You" : "Ayush AI";
+    label.textContent = role === "user" ? "You" : BOT_NAME;
 
     const body = document.createElement("div");
     body.textContent = message;
@@ -352,7 +419,7 @@ function appendTyping(container) {
     bubble.className = "bubble assistant";
 
     const label = document.createElement("strong");
-    label.textContent = "Ayush AI";
+    label.textContent = BOT_NAME;
 
     const typing = document.createElement("div");
     typing.className = "typing";

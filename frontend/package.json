@@ -2,7 +2,7 @@
     "name": "ayush-ai-frontend",
     "version": "1.0.0",
     "private": true,
-    "description": "ayush.ai static personal website",
+    "description": "ai.yush static personal website",
     "type": "commonjs",
     "scripts": {
         "dev": "serve . -l 5500",

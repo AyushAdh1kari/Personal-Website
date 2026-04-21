@@ -9,10 +9,14 @@ const distDir = path.join(rootDir, "dist");
 
 const staticEntries = [
     "index.html",
+    "ai-yush.html",
     "about.html",
     "projects.html",
+    "experiences.html",
     "resume.html",
     "photopage.html",
+    "works.html",
+    "journey.html",
     "autocad.html",
     "mta.html",
     "styles.css",

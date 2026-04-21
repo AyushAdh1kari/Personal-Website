@@ -2,9 +2,9 @@ const RESPONSE_PLAYBOOK = [
     {
         match: ["project", "build", "built", "portfolio"],
         professional:
-            "Ayush is building ayush.ai as a conversation-first portfolio and also maintains a dedicated photography archive. The ongoing roadmap includes stronger AI integration and retrieval-backed answers.",
+            "Ayush is building ai.yush as a conversation-first portfolio and also maintains a dedicated photography archive. The ongoing roadmap includes stronger AI integration and retrieval-backed answers.",
         personal:
-            "He is currently building ayush.ai as a chat-first personal site and also curates a photography archive. A lot of his current momentum is around making the AI experience feel more natural and grounded.",
+            "I'm currently building ai.yush as a chat-first personal site, and I also curate a photography archive. A lot of my current momentum is around making the AI experience feel more natural and grounded.",
         sources: ["projects.md", "resume.md"]
     },
     {
@@ -12,7 +12,7 @@ const RESPONSE_PLAYBOOK = [
         professional:
             "His design style is clean, high-contrast, and intentional. The black/red visual system is built to feel memorable while staying easy to scan for recruiters and collaborators.",
         personal:
-            "His design taste leans bold and minimal: strong contrast, intentional typography, and no visual noise. The black/red palette is meant to feel confident without being flashy.",
+            "My design taste leans bold and minimal: strong contrast, intentional typography, and no visual noise. I want the black/red palette to feel confident without being flashy.",
         sources: ["writing-style.md", "personality.md"]
     },
     {
@@ -20,7 +20,7 @@ const RESPONSE_PLAYBOOK = [
         professional:
             "Ayush combines practical engineering with strong communication and ownership. He tends to move quickly from idea to implementation while keeping user experience and clarity in focus.",
         personal:
-            "He is collaborative, direct, and execution-focused. People usually appreciate that he can move from idea to shipped work quickly while still caring about user experience.",
+            "I'm collaborative, direct, and execution-focused. I like moving from idea to shipped work quickly while still caring about user experience.",
         sources: ["resume.md", "personality.md"]
     },
     {
@@ -28,7 +28,7 @@ const RESPONSE_PLAYBOOK = [
         professional:
             "Outside of coding, Ayush spends time on photography, astronomy, aviation, fitness, and documentaries. Those interests shape both his creativity and attention to detail.",
         personal:
-            "Outside work, he is into photography, astronomy, aviation, fitness, and documentaries. Those interests strongly influence how he thinks about creativity and precision.",
+            "Outside work, I'm into photography, astronomy, aviation, fitness, and documentaries. Those interests strongly influence how I think about creativity and precision.",
         sources: ["bio.md"]
     },
     {
@@ -61,10 +61,10 @@ function buildFallbackAnswer(question, retrievalSources = [], mode = "profession
     if (!selected) {
         selected = {
             professional:
-                "Good question. The full AI integration is now in progress. Ask about projects, technical skills, design style, interests, or hiring fit for the most useful results.",
+                "Happy to help — try asking about projects, technical skills, design style, interests, or hiring fit for the most grounded answers.",
             personal:
-                "Great question. AI mode tuning is in progress, but I can still help. Ask about projects, interests, skills, or what Ayush is currently focused on.",
-            sources: ["bio.md", "projects.md", "resume.md"]
+                "Happy to talk more personally. Ask about my interests, motivations, routines, working style, or anything else that helps you get a better sense of who I am.",
+            sources: ["profile.md", "bio.md", "projects.md", "resume.md"]
         };
     }
 

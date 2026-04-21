@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Talk to ai.yush, the AI layer for Ayush's site." />
+        <title>ai.yush | AI</title>
+        <link rel="stylesheet" href="styles.css?v=20260421c" />
+        <script src="app.js?v=20260421c" defer></script>
+    </head>
+
+    <body class="ai-page-minimal">
+        <main class="ai-minimal-shell">
+            <section class="ai-minimal-frame" aria-label="Talk to ai.yush">
+                <div class="ai-minimal-topline">
+                    <a class="home-hub-brand ai-brand-inline" href="index.html"
+                        >ai<span>.yush</span></a
+                    >
+                    <nav class="ai-minimal-nav" aria-label="Primary">
+                        <a class="ai-minimal-link active" href="ai-yush.html">Chat</a>
+                        <a class="ai-minimal-link" href="about.html">About Me</a>
+                        <a class="ai-minimal-link" href="projects.html">Projects</a>
+                        <a class="ai-minimal-link" href="experiences.html">Experiences</a>
+                        <a class="ai-minimal-link" href="journey.html">Journey</a>
+                    </nav>
+                </div>
+
+                <div class="ai-minimal-chat">
+                    <div class="chat-header chat-header-minimal">
+                        <h1 class="chat-title">Talk to ai<span style="color:var(--primary-bright)">.yush</span>.</h1>
+                        <span class="status-dot" aria-label="Online"></span>
+                    </div>
+
+                    <div class="mode-switch" role="group" aria-label="Chat mode">
+                        <button
+                            class="mode-btn active"
+                            type="button"
+                            data-mode="professional"
+                            aria-pressed="true"
+                        >
+                            Professional
+                        </button>
+                        <button
+                            class="mode-btn"
+                            type="button"
+                            data-mode="personal"
+                            aria-pressed="false"
+                        >
+                            Personal
+                        </button>
+                    </div>
+                    <p id="modeNote" class="mode-note">
+                        Best for recruiters and collaborators evaluating fit, projects, and skills.
+                    </p>
+
+                    <div
+                        id="chatMessages"
+                        class="chat-messages chat-messages-minimal"
+                        aria-live="polite"
+                    >
+                        <div class="bubble assistant">
+                            <strong>ai.yush</strong>
+                            Ask what you want to know.
+                        </div>
+                    </div>
+
+                    <form id="chatForm" class="chat-form chat-form-minimal">
+                        <label for="chatInput" class="sr-only">Talk to ai.yush</label>
+                        <input
+                            id="chatInput"
+                            class="chat-input"
+                            type="text"
+                            name="message"
+                            placeholder="Ask anything..."
+                            maxlength="240"
+                            autocomplete="off"
+                            required
+                        />
+                        <button class="chat-submit" type="submit">Send</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

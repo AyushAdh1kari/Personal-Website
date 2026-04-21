@@ -11,6 +11,9 @@ frontend/.env
 frontend/.env.local
 backend/.env
 backend/.env.local
+backend/private/*
+!backend/private/README.md
+!backend/private/profile.example.md
 **/.env
 **/.env.local
 **/.env.*

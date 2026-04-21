@@ -63,7 +63,35 @@ Chat modes:
 - `personal` (curiosity/personality context)
 
 Both modes can access the full knowledge base, but prompt/model behavior differs.
+Personal mode is tuned to speak more conversationally and can use private notes that stay on your machine.
 Rate limiting is enabled on `/api/chat` (IP-based, configurable via env vars).
+
+## Private Personal Context
+
+If you want the chatbot to sound more like you and answer broader personal questions, add private markdown files in:
+
+- `backend/private/`
+
+Recommended setup:
+
+```powershell
+Copy-Item backend/private/profile.example.md backend/private/profile.md
+```
+
+Then fill `backend/private/profile.md` with anything you want the backend-only AI layer to know, such as:
+
+- personal background
+- values and motivations
+- working style
+- routines and current goals
+- stories, preferences, and opinions
+
+These files are ignored by Git and are loaded only by the backend.
+By default, the backend reads:
+
+- public knowledge from `frontend/knowledge/`
+- private knowledge from `backend/private/`
+- the main personal profile from `backend/private/profile.md`
 
 ## Quality Checks
 
@@ -101,9 +129,20 @@ Build and run both services:
 docker compose up --build
 ```
 
+If port `8080` is already in use on your machine, this setup defaults the Docker frontend to `8081` instead.
+You can also choose a different host port explicitly:
+
+```bash
+FRONTEND_PORT=8090 docker compose up --build
+```
+
+For local Docker runs, the backend container reads environment variables from `backend/.env`.
+If you have not created it yet, copy `backend/.env.example` to `backend/.env` and add your real `OPENAI_API_KEY`.
+Docker Compose also mounts `backend/private/` into the backend container so private personal notes remain available in container mode.
+
 Services:
 
-- Frontend: `http://localhost:8080`
+- Frontend: `http://localhost:8081`
 - Backend: `http://localhost:3001/api/health`
 
 ## CI/CD
@@ -134,6 +173,8 @@ Optional mode-specific model env vars:
 - `OPENAI_CHAT_MODEL_PERSONAL`
 - `RATE_LIMIT_WINDOW_MS`
 - `RATE_LIMIT_CHAT_MAX`
+- `PRIVATE_KNOWLEDGE_DIR`
+- `PERSONAL_PROFILE_PATH`
 
 If you want OpenAI-backed responses from the Python AI layer, install Python dependencies:
 

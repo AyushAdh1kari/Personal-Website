@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="The cities that made Ayush — an interactive map of 11 cities across 2 countries."
+        />
+        <title>Journey | ai.yush</title>
+        <link rel="stylesheet" href="styles.css?v=20260421c" />
+        <script src="app.js?v=20260421c" defer></script>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        />
+        <style>
+            #map {
+                width: 100%;
+                height: 520px;
+                border-radius: 18px;
+                border: 1px solid var(--border);
+                background: #0c0c0c;
+            }
+
+            /* Override Leaflet popup to match dark theme */
+            .leaflet-popup-content-wrapper {
+                background: #111;
+                border: 1px solid rgba(217, 12, 24, 0.35);
+                border-radius: 12px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+                color: var(--text);
+            }
+
+            .leaflet-popup-tip {
+                background: #111;
+            }
+
+            .leaflet-popup-content {
+                margin: 12px 16px;
+                font-family: "Space Grotesk", sans-serif;
+            }
+
+            .popup-city {
+                font-size: 0.95rem;
+                font-weight: 600;
+                color: #fff;
+                margin-bottom: 2px;
+            }
+
+            .popup-region {
+                font-size: 0.75rem;
+                color: var(--muted);
+                margin-bottom: 6px;
+            }
+
+            .popup-years {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 0.72rem;
+                color: var(--primary-bright);
+            }
+
+            .leaflet-popup-close-button {
+                color: var(--muted) !important;
+            }
+
+            .leaflet-control-zoom a {
+                background: #111 !important;
+                border-color: var(--border) !important;
+                color: var(--text) !important;
+            }
+
+            .leaflet-control-zoom a:hover {
+                background: #1a1a1a !important;
+                color: #fff !important;
+            }
+
+            .leaflet-control-attribution {
+                background: rgba(0, 0, 0, 0.7) !important;
+                color: var(--muted) !important;
+            }
+
+            .leaflet-control-attribution a {
+                color: var(--muted) !important;
+            }
+
+            .stat-row {
+                display: flex;
+                gap: 2rem;
+                flex-wrap: wrap;
+            }
+
+            .stat-block {
+                display: flex;
+                flex-direction: column;
+                gap: 0.15rem;
+            }
+
+            .stat-number {
+                font-family: "Cormorant Garamond", Georgia, serif;
+                font-size: 2.4rem;
+                font-weight: 600;
+                color: var(--primary-bright);
+                line-height: 1;
+            }
+
+            .stat-label {
+                font-size: 0.78rem;
+                color: var(--muted);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
+
+            @media (max-width: 600px) {
+                #map {
+                    height: 380px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <header class="top-container">
+            <div class="header-row">
+                <div class="name-container">
+                    <a class="brand-link" href="index.html?skip">ai<span>.yush</span></a>
+                </div>
+                <nav class="primary-nav" aria-label="Primary">
+                    <a class="nav-link" href="ai-yush.html">Chat</a>
+                    <a class="nav-link" href="about.html">About</a>
+                    <a class="nav-link" href="projects.html">Projects</a>
+                    <a class="nav-link" href="experiences.html">Experiences</a>
+                    <a class="nav-link" href="works.html">Works</a>
+                </nav>
+                <div class="contact-icons" aria-label="Contact links">
+                    <a class="icon-link" href="tel:9802427858" aria-label="Call Ayush">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.08-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.6 12.6 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.6 12.6 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                            />
+                        </svg>
+                    </a>
+                    <a
+                        class="icon-link"
+                        href="https://www.linkedin.com/in/ayushadhikari1/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Ayush on LinkedIn"
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                            />
+                            <rect x="2" y="9" width="4" height="12" />
+                            <circle cx="4" cy="4" r="2" />
+                        </svg>
+                    </a>
+                    <a
+                        class="icon-link"
+                        href="https://github.com/AyushAdh1kari"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Ayush on GitHub"
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.2-1.5 6.2-6.7a5.2 5.2 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.5s-1.1-.3-3.6 1.3a12.5 12.5 0 0 0-6.5 0C7.2 1.4 6.1 1.7 6.1 1.7A4.9 4.9 0 0 0 6 5.2a5.2 5.2 0 0 0-1.4 3.6c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.6V22"
+                            />
+                        </svg>
+                    </a>
+                    <a
+                        class="icon-link"
+                        href="mailto:ayush.adhikari1203@gmail.com"
+                        aria-label="Email Ayush"
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <path d="m2 7 10 6 10-6" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="site-shell page-main">
+            <section class="page-hero">
+                <p class="section-label">Journey</p>
+                <h1 class="page-title">11 cities. 2 countries. Still moving.</h1>
+                <p class="page-subtitle">
+                    Born in Nepal, raised across the US — click any marker to see where I was and when.
+                </p>
+            </section>
+
+            <section class="section" aria-labelledby="stats-title">
+                <div class="stat-row">
+                    <div class="stat-block">
+                        <span class="stat-number">11</span>
+                        <span class="stat-label">Cities lived in</span>
+                    </div>
+                    <div class="stat-block">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">Countries</span>
+                    </div>
+                    <div class="stat-block">
+                        <span class="stat-number">22</span>
+                        <span class="stat-label">Years of moving</span>
+                    </div>
+                    <div class="stat-block">
+                        <span class="stat-number">8+</span>
+                        <span class="stat-label">Countries visited</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" aria-labelledby="map-title">
+                <div class="section-heading">
+                    <p class="section-label">The path</p>
+                    <h2 id="map-title" class="section-title">Where I've lived</h2>
+                </div>
+                <div id="map"></div>
+            </section>
+
+            <section class="section" aria-labelledby="cities-title">
+                <div class="section-heading">
+                    <p class="section-label">The list</p>
+                    <h2 id="cities-title" class="section-title">City by city</h2>
+                </div>
+                <div class="card-grid" id="cityGrid"></div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-row">
+                <span>ai.yush</span>
+                <span>Home is a moving target.</span>
+            </div>
+        </footer>
+
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            const cities = [
+                {
+                    name: "Kathmandu",
+                    region: "Nepal",
+                    lat: 27.7172,
+                    lng: 85.3240,
+                    years: "2004–2006",
+                    duration: "~1 year",
+                    note: "Where it all started."
+                },
+                {
+                    name: "Nepalgunj / Lumbini",
+                    region: "Nepal",
+                    lat: 27.9667,
+                    lng: 81.6167,
+                    years: "2006–2011",
+                    duration: "~5 years",
+                    note: "Grew up here before the move to the US."
+                },
+                {
+                    name: "Richmond",
+                    region: "Virginia, USA",
+                    lat: 37.5407,
+                    lng: -77.4360,
+                    years: "2011",
+                    duration: "3 months",
+                    note: "First stop in America."
+                },
+                {
+                    name: "Akron",
+                    region: "Ohio, USA",
+                    lat: 41.0814,
+                    lng: -81.5190,
+                    years: "2011",
+                    duration: "~1 month",
+                    note: "Stayed with dad right after Richmond."
+                },
+                {
+                    name: "Fairfax",
+                    region: "Virginia, USA",
+                    lat: 38.8462,
+                    lng: -77.3064,
+                    years: "2011–2012",
+                    duration: "~1 year",
+                    note: "Northern Virginia suburbs."
+                },
+                {
+                    name: "New York",
+                    region: "New York, USA",
+                    lat: 40.7128,
+                    lng: -74.0060,
+                    years: "2012–2013",
+                    duration: "~1 year",
+                    note: "One year in the city."
+                },
+                {
+                    name: "Chicago",
+                    region: "Illinois, USA",
+                    lat: 41.8781,
+                    lng: -87.6298,
+                    years: "2013–2016",
+                    duration: "~3 years",
+                    note: "Started in Des Plaines, moved into the city. Long winters, good architecture."
+                },
+                {
+                    name: "Tampa",
+                    region: "Florida, USA",
+                    lat: 27.9506,
+                    lng: -82.4572,
+                    years: "Summer 2015",
+                    duration: "One summer",
+                    note: "Stayed with dad. A break from Chicago."
+                },
+                {
+                    name: "Chantilly",
+                    region: "Virginia, USA",
+                    lat: 38.8973,
+                    lng: -77.4319,
+                    years: "2016–2018",
+                    duration: "~2 years",
+                    note: "Back to Northern Virginia."
+                },
+                {
+                    name: "Charlotte",
+                    region: "North Carolina, USA",
+                    lat: 35.2271,
+                    lng: -80.8431,
+                    years: "2018–2023",
+                    duration: "~5 years",
+                    note: "Huntersville/Charlotte area. Longest stretch. Feels like home."
+                },
+                {
+                    name: "Boston",
+                    region: "Massachusetts, USA",
+                    lat: 42.3601,
+                    lng: -71.0589,
+                    years: "2023–present",
+                    duration: "Current",
+                    note: "Northeastern, co-ops, and what comes next."
+                },
+            ];
+
+            const map = L.map("map", { zoomControl: true });
+
+            L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+                    attribution:
+                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    subdomains: "abcd",
+                    maxZoom: 19,
+                }
+            ).addTo(map);
+
+            const dotIcon = L.divIcon({
+                className: "",
+                html: `<div style="
+                    width:12px;height:12px;
+                    border-radius:50%;
+                    background:#d90c18;
+                    border:2px solid rgba(255,59,48,0.5);
+                    box-shadow:0 0 8px rgba(217,12,24,0.6);
+                "></div>`,
+                iconSize: [12, 12],
+                iconAnchor: [6, 6],
+                popupAnchor: [0, -10],
+            });
+
+            const currentIcon = L.divIcon({
+                className: "",
+                html: `<div style="
+                    width:16px;height:16px;
+                    border-radius:50%;
+                    background:#ff3b30;
+                    border:2px solid rgba(255,59,48,0.8);
+                    box-shadow:0 0 14px rgba(255,59,48,0.8);
+                "></div>`,
+                iconSize: [16, 16],
+                iconAnchor: [8, 8],
+                popupAnchor: [0, -12],
+            });
+
+            const latlngs = cities.map(c => [c.lat, c.lng]);
+
+            // Tampa was a detour from Chicago — route back through Chicago before Chantilly
+            const chicago = cities.find(c => c.name === "Chicago");
+            const tampa = cities.find(c => c.name === "Tampa");
+            const tampaIdx = cities.indexOf(tampa);
+            const pathCoords = [
+                ...latlngs.slice(0, tampaIdx + 1),
+                [chicago.lat, chicago.lng],
+                ...latlngs.slice(tampaIdx + 1),
+            ];
+
+            L.polyline(pathCoords, {
+                color: "#d90c18",
+                weight: 1.5,
+                opacity: 0.5,
+                dashArray: "5, 7",
+            }).addTo(map);
+
+            cities.forEach((city, i) => {
+                const icon = city.years.includes("present") ? currentIcon : dotIcon;
+                const marker = L.marker([city.lat, city.lng], { icon }).addTo(map);
+                marker.bindPopup(`
+                    <div class="popup-city">${city.name}</div>
+                    <div class="popup-region">${city.region}</div>
+                    <div class="popup-years">${city.years} · ${city.duration}</div>
+                `);
+            });
+
+            const bounds = L.latLngBounds(latlngs);
+            map.fitBounds(bounds, { padding: [40, 40] });
+            setTimeout(() => map.invalidateSize(), 100);
+
+            const grid = document.getElementById("cityGrid");
+            grid.innerHTML = cities.map((c, i) => `
+                <article class="content-card" style="padding:1rem 1.2rem;">
+                    <div style="display:flex;align-items:baseline;gap:0.6rem;margin-bottom:0.3rem;">
+                        <h3 class="card-title" style="margin:0">${c.name}</h3>
+                        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--primary-bright)">${i + 1}</span>
+                    </div>
+                    <p class="section-label" style="margin-bottom:0.4rem">${c.region}</p>
+                    <p class="small-copy" style="margin-bottom:0.4rem">${c.note}</p>
+                    <p style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted)">${c.years} · ${c.duration}</p>
+                </article>
+            `).join("");
+        </script>
+    </body>
+</html>

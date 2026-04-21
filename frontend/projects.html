@@ -3,22 +3,28 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Projects | ayush.ai</title>
-        <link rel="stylesheet" href="styles.css" />
-        <script src="app.js" defer></script>
+        <meta
+            name="description"
+            content="Projects by Ayush, from ai.yush to photography and AI-backed portfolio experiments."
+        />
+        <title>Projects | ai.yush</title>
+        <link rel="stylesheet" href="styles.css?v=20260421c" />
+        <script src="app.js?v=20260421c" defer></script>
     </head>
 
     <body>
         <header class="top-container">
             <div class="header-row">
                 <div class="name-container">
-                    <a class="brand-link" href="index.html">ayush<span>.ai</span></a>
+                    <a class="brand-link" href="index.html?skip">ai<span>.yush</span></a>
                 </div>
                 <nav class="primary-nav" aria-label="Primary">
-                    <a class="nav-link" href="index.html">Chat</a>
+                    <a class="nav-link" href="ai-yush.html">Chat</a>
                     <a class="nav-link" href="about.html">About</a>
                     <a class="nav-link" href="projects.html">Projects</a>
-                    <a class="nav-link" href="resume.html">Resume</a>
+                    <a class="nav-link" href="experiences.html">Experiences</a>
+                    <a class="nav-link" href="works.html">Works</a>
+                    <a class="nav-link" href="journey.html">Journey</a>
                 </nav>
                 <div class="contact-icons" aria-label="Contact links">
                     <a class="icon-link" href="tel:9802427858" aria-label="Call Ayush">
@@ -71,75 +77,86 @@
         </header>
 
         <main class="site-shell page-main">
-            <h1 class="page-title">Projects</h1>
-            <p class="page-subtitle">
-                Design + engineering work that reflects Ayush's interests and growth path.
-            </p>
+            <section class="page-hero">
+                <p class="section-label">Projects</p>
+                <h1 class="page-title">Things I have built and directions I am pushing next.</h1>
+                <p class="page-subtitle">
+                    The work sits at the intersection of code, design taste, and a strong bias
+                    toward making the experience feel intentional.
+                </p>
+            </section>
 
             <section class="project-list" aria-label="Project cards">
                 <article class="project-card">
-                    <h2 class="card-title">ayush.ai</h2>
+                    <h2 class="card-title">Simulant</h2>
                     <p class="small-copy">
-                        A GPT-style personal website where visitors ask questions and get grounded
-                        answers about experience, projects, and working style.
+                        A multi-agent simulation framework built to study deception, coalition
+                        behavior, and reasoning differences across LLMs. Includes a
+                        provider-agnostic adapter layer for 6 LLM providers with rate limiting,
+                        exponential backoff, and structured JSONL logging across 70+ simulation
+                        runs.
                     </p>
                     <div class="project-meta">
-                        <span class="meta-pill">Conversational UX</span>
-                        <span class="meta-pill">Brand Engineering</span>
-                        <span class="meta-pill">RAG Roadmap</span>
+                        <span class="meta-pill">Python</span>
+                        <span class="meta-pill">FastAPI</span>
+                        <span class="meta-pill">OpenAI · Anthropic · Gemini · DeepSeek · xAI · Ollama</span>
+                        <span class="meta-pill">Multi-agent systems</span>
                     </div>
                 </article>
 
                 <article class="project-card">
-                    <h2 class="card-title">Photography Archive</h2>
+                    <h2 class="card-title">CryptoJar</h2>
                     <p class="small-copy">
-                        A long-form personal gallery focused on aviation, landscapes,
-                        astrophotography, and travel visual storytelling.
+                        A full-stack payment platform converting USD invoices into blockchain
+                        payments across 6 chains (BTC, LTC, ETH, SOL, AVAX, XLM) via CoinGecko.
+                        Includes RESTful APIs for invoice management, wallet routing, role-based
+                        access control, and end-to-end encrypted messaging via Web Crypto API.
                     </p>
                     <div class="project-meta">
-                        <span class="meta-pill">Content Curation</span>
-                        <span class="meta-pill">Visual Direction</span>
+                        <span class="meta-pill">Java</span>
+                        <span class="meta-pill">Spring Boot</span>
+                        <span class="meta-pill">React · Next.js</span>
+                        <span class="meta-pill">TypeScript</span>
+                        <span class="meta-pill">Docker</span>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <h2 class="card-title">ai.yush</h2>
+                    <p class="small-copy">
+                        A chat-first personal site that lets people learn about me through
+                        conversation instead of static scrolling. Backed by a private knowledge
+                        layer for personality-aware, grounded responses.
+                    </p>
+                    <div class="project-meta">
+                        <span class="meta-pill">Conversation-first UX</span>
+                        <span class="meta-pill">LLM integration</span>
+                        <span class="meta-pill">RAG</span>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <h2 class="card-title">Photography archive</h2>
+                    <p class="small-copy">
+                        A long-form gallery built around aviation, landscapes, travel, and moments
+                        with atmosphere.
+                    </p>
+                    <div class="project-meta">
+                        <span class="meta-pill">Visual curation</span>
+                        <span class="meta-pill">Atmosphere</span>
                     </div>
                     <div class="button-row">
                         <a class="ghost-link" href="photopage.html">Open Gallery</a>
                     </div>
                 </article>
-
-                <article class="project-card">
-                    <h2 class="card-title">Learning + Certification Track</h2>
-                    <p class="small-copy">
-                        Structured upskilling through AutoCAD and Python certification programs,
-                        paired with hands-on coding projects.
-                    </p>
-                    <div class="project-meta">
-                        <span class="meta-pill">AutoCAD</span>
-                        <span class="meta-pill">Python</span>
-                    </div>
-                    <div class="button-row">
-                        <a class="ghost-link" href="autocad.html">AutoCAD Cert</a>
-                        <a class="ghost-link" href="mta.html">Python Cert</a>
-                    </div>
-                </article>
-
-                <article class="project-card">
-                    <h2 class="card-title">Current Focus</h2>
-                    <p class="small-copy">
-                        Integrating OpenAI + embeddings + vector retrieval so ayush.ai can answer
-                        with stronger grounding and source transparency.
-                    </p>
-                    <div class="project-meta">
-                        <span class="meta-pill">OpenAI API</span>
-                        <span class="meta-pill">Supabase Vector</span>
-                        <span class="meta-pill">Next.js Plan</span>
-                    </div>
-                </article>
             </section>
+
         </main>
 
         <footer>
             <div class="footer-row">
-                <span>ayush.ai</span>
-                <span>Conversation-first personal brand experience.</span>
+                <span>ai.yush</span>
+                <span>Projects with a clear point of view.</span>
             </div>
         </footer>
     </body>

@@ -4,7 +4,7 @@ services:
             context: ./frontend
             dockerfile: Dockerfile
         ports:
-            - "8080:80"
+            - "${FRONTEND_PORT:-8081}:80"
         restart: unless-stopped
 
     backend:
@@ -16,7 +16,11 @@ services:
         env_file:
             - ./backend/.env
         environment:
+            FRONTEND_ORIGIN: http://localhost:${FRONTEND_PORT:-8081}
             KNOWLEDGE_DIR: /app/knowledge
+            PRIVATE_KNOWLEDGE_DIR: /app/private
+            PYTHON_BIN: python3
         volumes:
             - ./frontend/knowledge:/app/knowledge:ro
+            - ./backend/private:/app/private:ro
         restart: unless-stopped
