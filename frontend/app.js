@@ -116,18 +116,18 @@ const HUB_EXIT_MESSAGES = {
         {
             en: "just a guy with too many tabs open.",
             romanized: "dherai tab haru khuleka chhan.",
-            devanagari: "अलि बढी ट्याब्स खुलेका छन्।"
+            devanagari: "धेरै ट्याब हरु खुलेका छन्।"
         },
         {
             en: "nepali kid who ended up in boston somehow.",
-            romanized: "ek Nepali keta, Boston pugyo kasari.",
-            devanagari: "एक नेपाली केटा, बोस्टन पुग्यो कसरी।"
+            romanized: "Nepali keta, Boston pugyo kasari.",
+            devanagari: "नेपाली केटा, बोस्टन पुग्यो कसरी।"
         }
     ],
     "projects.html": [
         {
             en: "The grind never ends...",
-            romanized: "kaam kabhi rukdaina...",
+            romanized: "kaam kaile rukdaina...",
             devanagari: "काम कहिल्यै रुकदैन..."
         },
         {
@@ -144,7 +144,7 @@ const HUB_EXIT_MESSAGES = {
     "experiences.html": [
         {
             en: "Still working on it...",
-            romanized: "abhai kaam gaardaichha...",
+            romanized: "ajhai kaam gaardaichha...",
             devanagari: "अझै काम गार्दैछ..."
         },
         {
@@ -165,14 +165,14 @@ const HUB_EXIT_MESSAGES = {
             devanagari: "हेर्ने? :)"
         },
         {
-            en: "shot on a mirrorless, edited with taste.",
-            romanized: "mirrorless le khinchyo, taste le edit garyo.",
-            devanagari: "मिरोरलेसले खिँच्यो, टेस्टले एडिट गर्यो।"
+            en: "Pinterest board from Temu.",
+            romanized: "Temu bata ko Pinterest board.",
+            devanagari: "टेमुबाटको पिन्टेरेस्ट बोर्ड।"
         },
         {
-            en: "I see things differently.",
-            romanized: "ma farak tarikale herdachhu.",
-            devanagari: "म फरक तरिकाले हेर्दछु।"
+            en: "I should really start taking more photos again.",
+            romanized: "ma ta pheri photography garna start garu jastai lagchha kailekain...",
+            devanagari: "म त फेरि फोटोग्राफी गर्न सुरु गरूँ जस्तो लाग्छ कहिलेकाहीँ..."
         }
     ],
     "works.html": [
