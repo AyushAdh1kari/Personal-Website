@@ -501,8 +501,7 @@ input {
 .landing-devanagari-line {
     font-family: "Noto Serif", "Noto Serif Devanagari", Georgia, serif;
     font-size: clamp(1.1rem, 2.6vw, 1.6rem);
-    color: rgba(255, 255, 255, 0.28);
-    transition-delay: 0.05s;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .ai-page-minimal {
