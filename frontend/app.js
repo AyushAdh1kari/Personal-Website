@@ -149,8 +149,35 @@ function wireHubNavExit() {
     const hubLinks = document.querySelectorAll(".home-hub-link");
     const intro = document.querySelector("[data-intro]");
     const typeTarget = document.querySelector("[data-type-text]");
+    const nepaliSubline = document.getElementById("nepaliSubline");
+    const nepaliDevanagari = document.getElementById("nepaliDevanagari");
 
     if (!hubLinks.length || !intro || !typeTarget) return;
+
+    function resetNepaliLines() {
+        if (nepaliSubline) {
+            nepaliSubline.classList.remove("visible");
+            nepaliSubline.textContent = "";
+        }
+        if (nepaliDevanagari) {
+            nepaliDevanagari.classList.remove("visible");
+            nepaliDevanagari.textContent = "";
+        }
+    }
+
+    function showNepaliLines(/** @type {() => void} */ onDone) {
+        if (nepaliSubline) {
+            nepaliSubline.textContent = "Namaste, mero naam Ayush ho.";
+            nepaliSubline.classList.add("visible");
+        }
+        window.setTimeout(function () {
+            if (nepaliDevanagari) {
+                nepaliDevanagari.textContent = "(नमस्ते, मेरो नाम आयुष हो।)";
+                nepaliDevanagari.classList.add("visible");
+            }
+        }, 320);
+        window.setTimeout(onDone, 1100);
+    }
 
     hubLinks.forEach(function (link) {
         link.addEventListener("click", function (event) {
@@ -170,6 +197,7 @@ function wireHubNavExit() {
             ).matches;
 
             typeTarget.textContent = "";
+            resetNepaliLines();
             document.body.classList.remove("intro-complete");
 
             if (prefersReducedMotion) {
@@ -181,7 +209,6 @@ function wireHubNavExit() {
             }
 
             const typeSpeedMs = 72;
-            const holdDelayMs = 800;
             let index = 0;
 
             window.setTimeout(function () {
@@ -190,9 +217,9 @@ function wireHubNavExit() {
                     typeTarget.textContent = message.slice(0, index);
                     if (index >= message.length) {
                         window.clearInterval(typeInterval);
-                        window.setTimeout(function () {
+                        showNepaliLines(function () {
                             window.location.href = href;
-                        }, holdDelayMs);
+                        });
                     }
                 }, typeSpeedMs);
             }, 120);
