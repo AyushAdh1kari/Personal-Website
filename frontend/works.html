@@ -78,6 +78,96 @@
                     grid-template-columns: 1fr;
                 }
             }
+
+            /* ── Tech stack marquee ── */
+            .tech-stack-section {
+                display: flex;
+                flex-direction: column;
+                gap: 1.6rem;
+            }
+
+            .tech-row {
+                display: flex;
+                flex-direction: column;
+                gap: 0.65rem;
+            }
+
+            .tech-row-label {
+                font-size: 0.7rem;
+                font-family: "IBM Plex Mono", Consolas, monospace;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--muted);
+            }
+
+            .tech-marquee {
+                overflow: hidden;
+                -webkit-mask-image: linear-gradient(
+                    to right,
+                    transparent,
+                    black 8%,
+                    black 92%,
+                    transparent
+                );
+                mask-image: linear-gradient(
+                    to right,
+                    transparent,
+                    black 8%,
+                    black 92%,
+                    transparent
+                );
+            }
+
+            .tech-track {
+                display: flex;
+                align-items: center;
+                gap: 2.8rem;
+                width: max-content;
+                animation: tech-scroll 26s linear infinite;
+            }
+
+            .tech-track--reverse {
+                animation-name: tech-scroll-r;
+                animation-duration: 32s;
+            }
+
+            .tech-track--slow {
+                animation-duration: 30s;
+            }
+
+            .tech-icon {
+                width: 34px;
+                height: 34px;
+                object-fit: contain;
+                opacity: 0.55;
+                transition: opacity 0.2s ease;
+                flex-shrink: 0;
+            }
+
+            .tech-icon:hover {
+                opacity: 1;
+            }
+
+            @keyframes tech-scroll {
+                to {
+                    transform: translateX(-50%);
+                }
+            }
+
+            @keyframes tech-scroll-r {
+                from {
+                    transform: translateX(-50%);
+                }
+                to {
+                    transform: translateX(0);
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .tech-track {
+                    animation-play-state: paused;
+                }
+            }
         </style>
     </head>
 
@@ -153,6 +243,373 @@
                 <p class="page-subtitle">
                     Repos, experiments, and works in progress — pulled live from GitHub.
                 </p>
+            </section>
+
+            <section class="section tech-stack-section" aria-label="Tech stack">
+                <div class="section-heading">
+                    <p class="section-label">Stack</p>
+                    <h2 class="section-title">What I build with</h2>
+                </div>
+
+                <div class="tech-row">
+                    <span class="tech-row-label">Languages</span>
+                    <div class="tech-marquee">
+                        <div class="tech-track">
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/java/ffffff"
+                                alt="Java"
+                                title="Java"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/python/ffffff"
+                                alt="Python"
+                                title="Python"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/typescript/ffffff"
+                                alt="TypeScript"
+                                title="TypeScript"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/javascript/ffffff"
+                                alt="JavaScript"
+                                title="JavaScript"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/c/ffffff"
+                                alt="C"
+                                title="C"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/mysql/ffffff"
+                                alt="MySQL"
+                                title="MySQL"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/solidity/ffffff"
+                                alt="Solidity"
+                                title="Solidity"
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/java/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/python/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/typescript/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/javascript/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/c/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/mysql/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/solidity/ffffff"
+                                alt=""
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tech-row">
+                    <span class="tech-row-label">Frameworks &amp; Libraries</span>
+                    <div class="tech-marquee">
+                        <div class="tech-track tech-track--reverse">
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/react/ffffff"
+                                alt="React"
+                                title="React"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/nextdotjs/ffffff"
+                                alt="Next.js"
+                                title="Next.js"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/express/ffffff"
+                                alt="Express"
+                                title="Express"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/springboot/ffffff"
+                                alt="Spring Boot"
+                                title="Spring Boot"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/junit5/ffffff"
+                                alt="JUnit"
+                                title="JUnit"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/pytorch/ffffff"
+                                alt="PyTorch"
+                                title="PyTorch"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/numpy/ffffff"
+                                alt="NumPy"
+                                title="NumPy"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/pandas/ffffff"
+                                alt="Pandas"
+                                title="Pandas"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/scikitlearn/ffffff"
+                                alt="Scikit-learn"
+                                title="Scikit-learn"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/matplotlib/ffffff"
+                                alt="Matplotlib"
+                                title="Matplotlib"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/streamlit/ffffff"
+                                alt="Streamlit"
+                                title="Streamlit"
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/react/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/nextdotjs/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/express/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/springboot/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/junit5/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/pytorch/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/numpy/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/pandas/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/scikitlearn/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/matplotlib/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/streamlit/ffffff"
+                                alt=""
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tech-row">
+                    <span class="tech-row-label">Developer Tools</span>
+                    <div class="tech-marquee">
+                        <div class="tech-track tech-track--slow">
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/nodedotjs/ffffff"
+                                alt="Node.js"
+                                title="Node.js"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/git/ffffff"
+                                alt="Git"
+                                title="Git"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/docker/ffffff"
+                                alt="Docker"
+                                title="Docker"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/githubactions/ffffff"
+                                alt="GitHub Actions"
+                                title="GitHub Actions"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/apachemaven/ffffff"
+                                alt="Maven"
+                                title="Maven"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/intellijidea/ffffff"
+                                alt="IntelliJ IDEA"
+                                title="IntelliJ IDEA"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/visualstudiocode/ffffff"
+                                alt="VS Code"
+                                title="VS Code"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/jupyter/ffffff"
+                                alt="Jupyter"
+                                title="Jupyter"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/supabase/ffffff"
+                                alt="Supabase"
+                                title="Supabase"
+                            />
+                            <img
+                                class="tech-icon"
+                                src="https://cdn.simpleicons.org/netlify/ffffff"
+                                alt="Netlify"
+                                title="Netlify"
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/nodedotjs/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/git/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/docker/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/githubactions/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/apachemaven/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/intellijidea/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/visualstudiocode/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/jupyter/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/supabase/ffffff"
+                                alt=""
+                            />
+                            <img
+                                class="tech-icon"
+                                aria-hidden="true"
+                                src="https://cdn.simpleicons.org/netlify/ffffff"
+                                alt=""
+                            />
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="section" aria-labelledby="contrib-title">
