@@ -3,7 +3,7 @@
 ## Simulant
 
 **Stack:** Python, FastAPI, OpenAI API, Anthropic API, Gemini API, DeepSeek API, xAI API, Ollama
-**Timeline:** Mar 2026 – Present
+**Timeline:** Mar 2026-present
 
 A multi-agent simulation framework for studying deception, coalition behavior, and reasoning differences across LLMs.
 
@@ -14,7 +14,7 @@ A multi-agent simulation framework for studying deception, coalition behavior, a
 ## CryptoJar
 
 **Stack:** Java, Spring Boot, Spring Security, JPA, React, Next.js, TypeScript, Mockito, Docker
-**Timeline:** Feb 2026 – Present
+**Timeline:** Feb 2026-present
 
 A full-stack payment platform converting USD invoices into blockchain payments across 6 chains (BTC, LTC, ETH, SOL, AVAX, XLM) via CoinGecko API.
 
@@ -25,10 +25,14 @@ A full-stack payment platform converting USD invoices into blockchain payments a
 
 ## ai.yush
 
-**Stack:** Node.js, Express, Python, OpenAI API, Docker
+**Stack:** Node.js, Express, Python, OpenAI API, Docker, Supabase/Postgres
 **Timeline:** Ongoing
 
 A chat-first personal portfolio site where visitors learn about Ayush through conversation rather than static scrolling. Backed by a private knowledge layer for personality-aware, grounded AI responses.
+
+- Added a live AI analytics dashboard for chat volume, latency, response path, topics, and cited knowledge sources
+- Added answer feedback capture and Supabase/Postgres persistence for future eval and model-quality workflows
+- Prepared pgvector-backed knowledge chunk storage for semantic retrieval
 
 ## Photography Archive
 

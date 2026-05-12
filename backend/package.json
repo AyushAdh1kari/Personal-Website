@@ -8,10 +8,11 @@
         "dev": "node --watch src/server.js",
         "start": "node src/server.js",
         "build": "node -e \"console.log('Backend build not required yet.')\"",
+        "sync:knowledge": "node scripts/sync-knowledge.js",
         "typecheck": "tsc --project tsconfig.json",
-        "lint": "eslint \"src/**/*.js\" --max-warnings=0",
-        "format": "prettier --write \"src/**/*.js\" \"*.json\"",
-        "format:check": "prettier --check \"src/**/*.js\" \"*.json\"",
+        "lint": "eslint \"src/**/*.js\" \"scripts/**/*.js\" --max-warnings=0",
+        "format": "prettier --write \"src/**/*.js\" \"scripts/**/*.js\" \"*.json\"",
+        "format:check": "prettier --check \"src/**/*.js\" \"scripts/**/*.js\" \"*.json\"",
         "check": "npm run typecheck && npm run lint && npm run format:check"
     },
     "engines": {

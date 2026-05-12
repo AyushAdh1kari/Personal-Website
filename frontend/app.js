@@ -221,6 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
     wireLandingIntro();
     wireHubNavExit();
     wireChatDemo();
+    wireAnalyticsDashboard();
 
     document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {
@@ -502,7 +503,13 @@ async function submitPrompt(question, chatMessages, chatInput) {
         typingBubble.parentNode.removeChild(typingBubble);
     }
 
-    appendBubble(chatMessages, "assistant", chatResponse.answer, chatResponse.sources);
+    appendBubble(
+        chatMessages,
+        "assistant",
+        chatResponse.answer,
+        chatResponse.sources,
+        chatResponse.chatEventId
+    );
     pushHistory("user", question);
     pushHistory("assistant", chatResponse.answer);
     isSubmitting = false;
@@ -559,7 +566,8 @@ async function requestBackendResponse(question, history, mode) {
         return {
             answer: payload.answer,
             sources: Array.isArray(payload.sources) ? payload.sources : [],
-            mode: typeof payload.mode === "string" ? payload.mode : "backend"
+            mode: typeof payload.mode === "string" ? payload.mode : "backend",
+            chatEventId: typeof payload.chatEventId === "string" ? payload.chatEventId : ""
         };
     } finally {
         clearTimeout(timeoutHandle);
@@ -607,7 +615,7 @@ function buildLocalFallback(question, mode) {
     };
 }
 
-function appendBubble(container, role, message, sources) {
+function appendBubble(container, role, message, sources, chatEventId) {
     const bubble = document.createElement("div");
     bubble.className = "bubble " + role;
 
@@ -634,10 +642,73 @@ function appendBubble(container, role, message, sources) {
         bubble.appendChild(sourceRow);
     }
 
+    if (role === "assistant" && chatEventId) {
+        bubble.appendChild(createFeedbackControls(chatEventId));
+    }
+
     container.appendChild(bubble);
     container.scrollTop = container.scrollHeight;
 
     return bubble;
+}
+
+function createFeedbackControls(chatEventId) {
+    const controls = document.createElement("div");
+    controls.className = "feedback-controls";
+    controls.setAttribute("aria-label", "Rate this answer");
+
+    const positive = createFeedbackButton("positive", "Good answer", "+");
+    const negative = createFeedbackButton("negative", "Needs work", "-");
+
+    [positive, negative].forEach(function (button) {
+        button.addEventListener("click", function () {
+            submitFeedback(chatEventId, button.getAttribute("data-rating") || "", controls);
+        });
+        controls.appendChild(button);
+    });
+
+    return controls;
+}
+
+function createFeedbackButton(rating, label, symbol) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "feedback-btn";
+    button.setAttribute("data-rating", rating);
+    button.setAttribute("aria-label", label);
+    button.textContent = symbol;
+    return button;
+}
+
+async function submitFeedback(chatEventId, rating, controls) {
+    if (!chatEventId || (rating !== "positive" && rating !== "negative")) {
+        return;
+    }
+
+    controls.classList.add("is-submitted");
+    controls.querySelectorAll("button").forEach(function (button) {
+        button.setAttribute("disabled", "true");
+    });
+
+    try {
+        const response = await fetch(resolveApiBaseUrl() + "/api/feedback", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                chatEventId,
+                rating
+            })
+        });
+        if (!response.ok) {
+            throw new Error("Feedback request failed.");
+        }
+        controls.setAttribute("data-status", "Feedback saved");
+    } catch {
+        controls.classList.remove("is-submitted");
+        controls.setAttribute("data-status", "Feedback unavailable");
+    }
 }
 
 function appendTyping(container) {
@@ -660,4 +731,281 @@ function appendTyping(container) {
     container.scrollTop = container.scrollHeight;
 
     return bubble;
+}
+
+function wireAnalyticsDashboard() {
+    const status = document.getElementById("analyticsStatus");
+    if (!status) {
+        return;
+    }
+
+    loadAnalyticsDashboard();
+}
+
+async function loadAnalyticsDashboard() {
+    const status = document.getElementById("analyticsStatus");
+
+    try {
+        const snapshot = await requestAnalyticsSnapshot();
+        renderAnalyticsDashboard(snapshot);
+        if (status) {
+            status.textContent = "Updated " + formatTime(snapshot.generatedAt);
+            status.classList.remove("is-error");
+        }
+    } catch {
+        if (status) {
+            status.textContent = "Backend analytics unavailable";
+            status.classList.add("is-error");
+        }
+        renderEmptyAnalyticsState();
+    }
+}
+
+async function requestAnalyticsSnapshot() {
+    const apiBaseUrl = resolveApiBaseUrl();
+    const controller = new AbortController();
+    const timeoutHandle = setTimeout(function () {
+        controller.abort();
+    }, API_TIMEOUT_MS);
+
+    try {
+        const response = await fetch(apiBaseUrl + "/api/analytics", {
+            signal: controller.signal
+        });
+
+        if (!response.ok) {
+            throw new Error("Analytics response was not OK.");
+        }
+
+        return await response.json();
+    } finally {
+        clearTimeout(timeoutHandle);
+    }
+}
+
+function renderAnalyticsDashboard(snapshot) {
+    const summary = snapshot.summary || {};
+    const retention = snapshot.retention || {};
+
+    setText("metricTotal", formatNumber(summary.totalMessages || 0));
+    setText("metricLastDay", formatNumber(summary.last24Hours || 0) + " in the last 24h");
+    setText("metricLatency", formatNumber(summary.averageLatencyMs || 0) + "ms");
+    setText("metricP95", "p95 " + formatNumber(summary.p95LatencyMs || 0) + "ms");
+    setText("metricSources", String(summary.averageSourcesPerAnswer || 0));
+    setText("metricStored", formatNumber(retention.storedEvents || 0));
+    setText("metricRetention", "of " + formatNumber(retention.maxEvents || 0) + " rolling events");
+    setText(
+        "promptPrivacyNote",
+        retention.promptPreviewsEnabled ? "Prompt previews on" : "Prompt previews off"
+    );
+
+    renderTimelineChart("trafficChart", snapshot.timeline || []);
+    renderBarChart("responseChart", snapshot.responseModes || {});
+    renderBarChart("modeChart", snapshot.modes || {});
+    renderBarChart("topicChart", snapshot.topics || {});
+    renderBarChart("sourceChart", snapshot.sources || {});
+    renderRecentEvents("recentEvents", snapshot.recent || [], retention.promptPreviewsEnabled);
+}
+
+function renderEmptyAnalyticsState() {
+    renderTimelineChart("trafficChart", []);
+    renderBarChart("responseChart", {});
+    renderBarChart("modeChart", {});
+    renderBarChart("topicChart", {});
+    renderBarChart("sourceChart", {});
+    renderRecentEvents("recentEvents", [], false);
+}
+
+function renderTimelineChart(targetId, timeline) {
+    const target = document.getElementById(targetId);
+    if (!target) {
+        return;
+    }
+
+    target.innerHTML = "";
+
+    if (!timeline.length) {
+        appendEmptyState(target, "No traffic yet.");
+        return;
+    }
+
+    const maxCount = Math.max(
+        1,
+        ...timeline.map(function (bucket) {
+            return Number(bucket.count || 0);
+        })
+    );
+
+    timeline.forEach(function (bucket) {
+        const count = Number(bucket.count || 0);
+        const column = document.createElement("div");
+        column.className = "traffic-column";
+        column.title = formatHour(bucket.hour) + ": " + count + " messages";
+
+        const bar = document.createElement("span");
+        bar.style.height = Math.max(6, (count / maxCount) * 100) + "%";
+
+        const label = document.createElement("small");
+        label.textContent = formatHour(bucket.hour);
+
+        column.appendChild(bar);
+        column.appendChild(label);
+        target.appendChild(column);
+    });
+}
+
+function renderBarChart(targetId, counts) {
+    const target = document.getElementById(targetId);
+    if (!target) {
+        return;
+    }
+
+    target.innerHTML = "";
+
+    const entries = Object.entries(counts)
+        .filter(function ([, value]) {
+            return Number(value) > 0;
+        })
+        .sort(function (a, b) {
+            return Number(b[1]) - Number(a[1]);
+        })
+        .slice(0, 8);
+
+    if (!entries.length) {
+        appendEmptyState(target, "No data yet.");
+        return;
+    }
+
+    const maxValue = Math.max(
+        ...entries.map(function ([, value]) {
+            return Number(value);
+        })
+    );
+
+    entries.forEach(function ([label, value]) {
+        const row = document.createElement("div");
+        row.className = "bar-row";
+
+        const rowHeader = document.createElement("div");
+        rowHeader.className = "bar-label";
+
+        const name = document.createElement("span");
+        name.textContent = formatAnalyticsLabel(label);
+
+        const number = document.createElement("strong");
+        number.textContent = formatNumber(Number(value));
+
+        const track = document.createElement("div");
+        track.className = "bar-track";
+
+        const fill = document.createElement("span");
+        fill.style.width = Math.max(4, (Number(value) / maxValue) * 100) + "%";
+
+        rowHeader.appendChild(name);
+        rowHeader.appendChild(number);
+        track.appendChild(fill);
+        row.appendChild(rowHeader);
+        row.appendChild(track);
+        target.appendChild(row);
+    });
+}
+
+function renderRecentEvents(targetId, events, promptPreviewsEnabled) {
+    const target = document.getElementById(targetId);
+    if (!target) {
+        return;
+    }
+
+    target.innerHTML = "";
+
+    if (!events.length) {
+        appendEmptyState(target, "Recent chat events will appear here.");
+        return;
+    }
+
+    events.forEach(function (event) {
+        const row = document.createElement("article");
+        row.className = "event-row";
+
+        const header = document.createElement("div");
+        header.className = "event-header";
+
+        const title = document.createElement("strong");
+        title.textContent = event.topic || "General";
+
+        const time = document.createElement("span");
+        time.textContent = formatTime(event.timestamp);
+
+        const detail = document.createElement("p");
+        detail.textContent =
+            promptPreviewsEnabled && event.promptPreview
+                ? event.promptPreview
+                : "Prompt privacy is enabled. Tracking category, mode, latency, and sources only.";
+
+        const meta = document.createElement("div");
+        meta.className = "event-meta";
+        [event.mode, event.responseMode, formatNumber(event.latencyMs || 0) + "ms"].forEach(
+            function (item) {
+                const chip = document.createElement("span");
+                chip.textContent = formatAnalyticsLabel(item);
+                meta.appendChild(chip);
+            }
+        );
+
+        header.appendChild(title);
+        header.appendChild(time);
+        row.appendChild(header);
+        row.appendChild(detail);
+        row.appendChild(meta);
+        target.appendChild(row);
+    });
+}
+
+function appendEmptyState(target, message) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = message;
+    target.appendChild(empty);
+}
+
+function setText(id, value) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.textContent = value;
+    }
+}
+
+function formatNumber(value) {
+    return new Intl.NumberFormat("en-US").format(Number(value || 0));
+}
+
+function formatAnalyticsLabel(value) {
+    return String(value || "unknown")
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, function (letter) {
+            return letter.toUpperCase();
+        });
+}
+
+function formatTime(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return "just now";
+    }
+
+    return date.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit"
+    });
+}
+
+function formatHour(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return "";
+    }
+
+    return date.toLocaleTimeString([], {
+        hour: "numeric"
+    });
 }

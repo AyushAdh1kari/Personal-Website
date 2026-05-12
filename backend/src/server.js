@@ -6,12 +6,15 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 
 const { retrieveRelevantChunks } = require("./lib/knowledge");
+const { buildAnalyticsSnapshot, recordChatEvent } = require("./services/analyticsStore");
 const { buildFallbackAnswer } = require("./services/fallbackResponder");
+const { recordMessageFeedback } = require("./services/feedbackStore");
 
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
 const port = Number(process.env.PORT || 3001);
+const host = process.env.HOST || "0.0.0.0";
 const pythonTimeoutMs = Number(process.env.PYTHON_TIMEOUT_MS || 12_000);
 const maxMessageLength = Number(process.env.MAX_MESSAGE_LENGTH || 500);
 const rateLimitWindowMs = Number(process.env.RATE_LIMIT_WINDOW_MS || 60_000);
@@ -42,6 +45,10 @@ app.get("/api/health", (_req, res) => {
         aiLayer: "python",
         supportedModes: ["professional", "personal"]
     });
+});
+
+app.get("/api/analytics", async (_req, res) => {
+    res.status(200).json(await buildAnalyticsSnapshot());
 });
 
 app.post("/api/chat", chatRateLimiter, async (req, res) => {
@@ -75,13 +82,26 @@ app.post("/api/chat", chatRateLimiter, async (req, res) => {
             console.warn("[ai] Python layer returned fallback warning:", pythonResponse.warning);
         }
 
+        const sources = normalizeSources(pythonResponse.sources);
+        const responseMode = pythonResponse.mode || "python-openai";
+        const latencyMs = Date.now() - startedAt;
+        const chatEvent = await recordChatEvent({
+            message,
+            mode,
+            responseMode,
+            latencyMs,
+            sources
+        });
+
         return res.status(200).json({
             ok: true,
             answer: pythonResponse.answer,
-            sources: normalizeSources(pythonResponse.sources),
-            mode: pythonResponse.mode || "python-openai",
+            sources,
+            mode: responseMode,
             persona: mode,
-            latencyMs: Date.now() - startedAt,
+            latencyMs,
+            chatEventId: chatEvent.id,
+            analyticsStorage: chatEvent.storage,
             ...(pythonResponse.warning ? { warning: pythonResponse.warning } : {})
         });
     } catch (error) {
@@ -89,6 +109,14 @@ app.post("/api/chat", chatRateLimiter, async (req, res) => {
         const relevantChunks = await retrieveRelevantChunks(message, 3, mode).catch(() => []);
         const retrievalSources = relevantChunks.map((chunk) => chunk.source);
         const fallback = buildFallbackAnswer(message, retrievalSources, mode);
+        const latencyMs = Date.now() - startedAt;
+        const chatEvent = await recordChatEvent({
+            message,
+            mode,
+            responseMode: "fallback-node",
+            latencyMs,
+            sources: fallback.sources
+        });
 
         return res.status(200).json({
             ok: true,
@@ -96,8 +124,34 @@ app.post("/api/chat", chatRateLimiter, async (req, res) => {
             sources: fallback.sources,
             mode: "fallback-node",
             persona: mode,
-            latencyMs: Date.now() - startedAt,
+            latencyMs,
+            chatEventId: chatEvent.id,
+            analyticsStorage: chatEvent.storage,
             warning: "python_ai_unavailable"
+        });
+    }
+});
+
+app.post("/api/feedback", async (req, res) => {
+    try {
+        const result = await recordMessageFeedback({
+            chatEventId: req.body?.chatEventId,
+            rating: req.body?.rating,
+            correction: req.body?.correction,
+            metadata: {
+                source: "chat-ui"
+            }
+        });
+
+        res.status(201).json({
+            ok: true,
+            feedbackId: result.id,
+            storage: result.storage
+        });
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            message: error instanceof Error ? error.message : "Invalid feedback payload."
         });
     }
 });
@@ -296,6 +350,6 @@ function runPythonCandidate(candidate, payload) {
     });
 }
 
-app.listen(port, () => {
-    console.log(`Backend API listening on http://localhost:${port}`);
+app.listen(port, host, () => {
+    console.log(`Backend API listening on http://${host}:${port}`);
 });

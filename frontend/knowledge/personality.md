@@ -8,3 +8,4 @@ He values consistency, curiosity, and practical execution over buzzwords.
 - Builder mindset
 - User-focused decisions
 - Reliable follow-through
+- Honesty and Authenticitiy

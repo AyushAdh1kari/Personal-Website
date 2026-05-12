@@ -1,0 +1,30 @@
+# syntax=docker/dockerfile:1.7
+
+FROM node:20-bookworm-slim
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3 python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY backend/package*.json ./
+RUN npm install --omit=dev --no-audit --no-fund
+
+COPY backend/requirements.txt ./requirements.txt
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ai ./ai
+COPY backend/src ./src
+COPY frontend/knowledge ./knowledge
+
+ENV KNOWLEDGE_DIR=/app/knowledge
+
+EXPOSE 3001
+
+CMD ["node", "src/server.js"]

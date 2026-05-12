@@ -56,6 +56,8 @@ npm run dev:backend
 
 Open health endpoint: `http://localhost:3001/api/health`.
 Chat endpoint: `POST http://localhost:3001/api/chat`.
+Analytics endpoint: `GET http://localhost:3001/api/analytics`.
+Feedback endpoint: `POST http://localhost:3001/api/feedback`.
 If Python is not available, backend chat falls back to Node-based responses.
 Chat modes:
 
@@ -65,6 +67,34 @@ Chat modes:
 Both modes can access the full knowledge base, but prompt/model behavior differs.
 Personal mode is tuned to speak more conversationally and can use private notes that stay on your machine.
 Rate limiting is enabled on `/api/chat` (IP-based, configurable via env vars).
+AI analytics are stored in memory unless Supabase is configured. The dashboard is available at
+`frontend/analytics.html` locally and `analytics.html` in the static build. Prompt text is not stored
+by default; prompts are hashed and only metadata is persisted.
+
+## Database
+
+Supabase/Postgres is optional locally, but enables persistent AI analytics, answer feedback, future
+eval datasets, and pgvector-backed knowledge search.
+
+1. Create a Supabase project.
+2. Run `supabase/migrations/001_ai_platform.sql` in the Supabase SQL editor.
+3. Set backend environment variables:
+
+```bash
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+OPENAI_API_KEY=your-openai-key
+```
+
+4. Start the backend. Chat analytics and feedback will persist automatically.
+5. Optional: sync markdown knowledge chunks and embeddings:
+
+```bash
+npm run sync:knowledge --workspace backend
+```
+
+The `knowledge_chunks` table is prepared for `text-embedding-3-small` dimensions. If you switch to an
+embedding model with a different vector size, update the `vector(1536)` columns/functions in the SQL.
 
 ## Private Personal Context
 
@@ -175,6 +205,12 @@ Optional mode-specific model env vars:
 - `RATE_LIMIT_CHAT_MAX`
 - `PRIVATE_KNOWLEDGE_DIR`
 - `PERSONAL_PROFILE_PATH`
+- `ANALYTICS_MAX_EVENTS`
+- `ANALYTICS_INCLUDE_PROMPTS`
+- `FEEDBACK_MAX_EVENTS`
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_ANON_KEY`
 
 If you want OpenAI-backed responses from the Python AI layer, install Python dependencies:
 

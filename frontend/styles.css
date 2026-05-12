@@ -867,6 +867,51 @@ input {
     box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
+.feedback-controls {
+    margin-top: 0.55rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.feedback-controls::after {
+    content: attr(data-status);
+    color: var(--muted);
+    font-size: 0.72rem;
+}
+
+.feedback-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 50%;
+    background: #151515;
+    color: var(--muted);
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.feedback-btn:hover {
+    border-color: var(--primary);
+    color: #ffd8da;
+}
+
+.feedback-btn:disabled {
+    cursor: default;
+    opacity: 0.65;
+}
+
+.feedback-controls.is-submitted .feedback-btn {
+    background: rgba(229, 9, 20, 0.14);
+    border-color: rgba(229, 9, 20, 0.45);
+    color: #ffd8da;
+}
+
 .typing {
     display: inline-flex;
     gap: 0.28rem;
@@ -1163,5 +1208,279 @@ footer {
 
     .ai-minimal-topline {
         justify-content: center;
+    }
+}
+
+.chat-only-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.chat-only-intro {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.chat-only-intro h1 {
+    margin: 0;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+}
+
+.chat-only-intro p {
+    margin: 0.65rem auto 0;
+    color: var(--muted);
+    max-width: 58ch;
+}
+
+.chat-panel.chat-only {
+    min-height: 620px;
+}
+
+.analytics-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.analytics-status {
+    border: 1px solid rgba(229, 9, 20, 0.45);
+    border-radius: 999px;
+    background: rgba(229, 9, 20, 0.12);
+    color: #ffd8da;
+    padding: 0.45rem 0.75rem;
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 0.74rem;
+    white-space: nowrap;
+}
+
+.analytics-status.is-error {
+    border-color: rgba(255, 255, 255, 0.18);
+    background: #1b1b1b;
+    color: var(--muted);
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.metric-card,
+.analytics-panel {
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.01));
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+}
+
+.metric-card {
+    min-height: 132px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.metric-label,
+.metric-note {
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.metric-label {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.metric-card strong {
+    font-size: clamp(1.7rem, 4vw, 2.45rem);
+    line-height: 1;
+}
+
+.analytics-layout {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.analytics-panel {
+    padding: 1rem;
+    min-height: 280px;
+}
+
+.analytics-panel.wide {
+    grid-column: 1 / -1;
+}
+
+.panel-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.panel-heading .section-title {
+    margin: 0;
+}
+
+.line-chart {
+    height: 250px;
+    display: grid;
+    grid-template-columns: repeat(24, minmax(10px, 1fr));
+    gap: 0.35rem;
+    align-items: end;
+    padding-top: 0.5rem;
+}
+
+.traffic-column {
+    height: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    align-items: end;
+    gap: 0.45rem;
+}
+
+.traffic-column span {
+    display: block;
+    min-height: 6px;
+    border-radius: 8px 8px 2px 2px;
+    background: linear-gradient(180deg, #ff3a45, #8e050d);
+    box-shadow: 0 0 18px rgba(229, 9, 20, 0.18);
+}
+
+.traffic-column small {
+    color: var(--muted);
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 0.58rem;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    justify-self: center;
+}
+
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.bar-row {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+.bar-label strong {
+    color: var(--text);
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 0.78rem;
+}
+
+.bar-track {
+    height: 10px;
+    border-radius: 999px;
+    background: #232323;
+    overflow: hidden;
+}
+
+.bar-track span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #e50914, #ff7b82);
+}
+
+.event-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.event-row {
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 14px;
+    background: #131313;
+    padding: 0.85rem;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+}
+
+.event-header span {
+    color: var(--muted);
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 0.72rem;
+}
+
+.event-row p {
+    margin: 0.45rem 0 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.event-meta {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.event-meta span {
+    border: 1px solid rgba(229, 9, 20, 0.38);
+    border-radius: 999px;
+    color: #f4b6ba;
+    background: rgba(229, 9, 20, 0.11);
+    padding: 0.15rem 0.45rem;
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 0.66rem;
+}
+
+.empty-state {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+@media (max-width: 1024px) {
+    .analytics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 780px) {
+    .analytics-hero {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .analytics-grid,
+    .analytics-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-panel {
+        min-height: auto;
+    }
+
+    .line-chart {
+        height: 210px;
+        gap: 0.24rem;
+    }
+
+    .traffic-column small {
+        font-size: 0.5rem;
     }
 }

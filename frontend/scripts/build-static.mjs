@@ -14,6 +14,7 @@ const staticEntries = [
     "projects.html",
     "experiences.html",
     "resume.html",
+    "analytics.html",
     "photopage.html",
     "works.html",
     "journey.html",

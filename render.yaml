@@ -1,0 +1,37 @@
+services:
+    - type: web
+      name: ayush-ai-backend
+      runtime: docker
+      dockerfilePath: backend/Dockerfile.cloud
+      dockerContext: .
+      healthCheckPath: /api/health
+      autoDeployTrigger: checksPass
+      envVars:
+          - key: NODE_ENV
+            value: production
+          - key: PORT
+            value: 3001
+          - key: KNOWLEDGE_DIR
+            value: /app/knowledge
+          - key: FRONTEND_ORIGIN
+            sync: false
+          - key: OPENAI_API_KEY
+            sync: false
+          - key: OPENAI_CHAT_MODEL
+            value: gpt-4.1-mini
+          - key: OPENAI_CHAT_MODEL_PROFESSIONAL
+            sync: false
+          - key: OPENAI_CHAT_MODEL_PERSONAL
+            sync: false
+          - key: OPENAI_EMBEDDING_MODEL
+            value: text-embedding-3-small
+          - key: RATE_LIMIT_WINDOW_MS
+            value: 60000
+          - key: RATE_LIMIT_CHAT_MAX
+            value: 30
+          - key: ANALYTICS_MAX_EVENTS
+            value: 500
+          - key: ANALYTICS_INCLUDE_PROMPTS
+            value: false
+          - key: FEEDBACK_MAX_EVENTS
+            value: 200
